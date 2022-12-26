@@ -1,0 +1,65 @@
+﻿<div ng-app ng-controller="ConfigurationController as vm" id="headlessPreviewDashboard">
+	<umb-box>
+		<umb-box-content>
+            <div class="configuration-dashboard">
+
+                <umb-load-indicator ng-if="vm.loadingConfiguration || vm.buttonState === 'busy'">
+                </umb-load-indicator>
+
+                <div class="configuration-dashboard-content" ng-if="!vm.loadingConfiguration">
+
+                    <div ng-if="vm.configuration.configuredFromSettingsFile" class="alert-info umb-app-header umb-notifications__notification configuration-dashboard-notice">
+                        <strong>The settings are loaded from the appsettings.json file.</strong>&nbsp;<span>Go to the file to change the values</span>
+                    </div>
+
+                    <div class="configuration-dashboard-property">
+                        <label for="use-umbraco-hostnames">Use Umbraco Hostnames</label><br/>
+
+                        <button role="checkbox" type="button" class="umb-toggle"
+                                ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"
+                                ng-class="{'umb-toggle--checked': vm.configuration.useUmbracoHostnames, 'umb-toggle--disabled': vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile}"
+                                ng-click="vm.toggleUseUmbracoHostnames()">
+                            <div class="umb-toggle__toggle">
+                                <span aria-hidden="true" class="umb-toggle__icon umb-toggle__icon--left umb-icon" icon="icon-check">
+                                    <span class="umb-icon__inner icon-check">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                                <path d="M461.884 68.14c-132.601 81.297-228.817 183.87-272.048 235.345l-105.874-82.95-46.751 37.691 182.941 186.049c31.485-80.646 131.198-238.264 252.956-350.252L461.884 68.14z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span aria-hidden="true" class="umb-toggle__icon umb-toggle__icon--right umb-icon" icon="icon-wrong">
+                                    <span class="umb-icon__inner icon-wrong">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                                <path d="M422.952 371.305L307.064 255.418l115.884-115.887-51.722-51.723L255.34 203.693 139.457 87.812l-51.726 51.719 115.885 115.885L87.731 371.305l51.726 51.721L255.344 307.14l115.884 115.882z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </span>
+                                <div class="umb-toggle__handler"></div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="configuration-dashboard-property" ng-if="!vm.configuration.useUmbracoHostnames">
+                        <label for="static-hostname">Static Hostname</label><br/>
+                        <input type="text" id="static-hostname" class="input-field" ng-model="vm.configuration.staticHostname" placeholder="Static Hostname" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"/>
+                    </div>
+                    <div class="configuration-dashboard-property">
+                        <label for="secret">Secret</label><br/>
+                        <input type="text" id="secret" class="input-field" ng-model="vm.configuration.secret" placeholder="Secret" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"/>
+                    </div>
+
+                    <umb-button ng-if="!vm.configuration.configuredFromSettingsFile" action="vm.saveConfiguration()"
+                                type="button"
+                                button-style="success"
+                                state="vm.configState"
+                                label="Save configuration"
+                                disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile || (!vm.configuration.useUmbracoHostnames && !vm.configuration.staticHostname)">
+                    </umb-button>
+                </div>
+            </div>
+		</umb-box-content>
+	</umb-box>
+</div>

@@ -1,0 +1,18 @@
+﻿{
+	"name": "Our.Umbraco.HeadlessPreview",
+	"version": "1.0.0",
+	"allowPackageTelemetry": true,
+	"javascript": [
+		// Preview button override
+		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/headlessPreview.decorator.js",
+		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/headlessPreview.service.js",
+		// Controllers
+		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/configuration.controller.js",
+
+		// Resources
+		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/resources.js"
+	],
+	"css": [
+		"~/App_Plugins/Our.Umbraco.HeadlessPreview/style/styles.css"
+	]
+}
