@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		CHANGELOG.md = CHANGELOG.md
+		GetBuildVersion.psm1 = GetBuildVersion.psm1
 		LICENSE = LICENSE
 		NuGet.Config = NuGet.Config
 		README.md = README.md
