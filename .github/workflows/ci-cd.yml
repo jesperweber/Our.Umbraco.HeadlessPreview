@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 
 on:
   create:
@@ -18,7 +18,7 @@ jobs:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Our.Umbraco.HeadlessPreview.sln'
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
