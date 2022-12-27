@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        dotnet: [ '6.0', '7.0' ]
+        dotnet: [ '6.0.x', '7.0.x' ]
 
     steps:
     - uses: actions/checkout@v3
