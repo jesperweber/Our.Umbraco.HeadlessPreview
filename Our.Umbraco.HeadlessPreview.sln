@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Our.Umbraco.HeadlessPreview", "src\Our.Umbraco.HeadlessPreview\Our.Umbraco.HeadlessPreview.csproj", "{B99C534A-9DBE-4A80-8E70-0C9227F3BC44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umbraco11", "src\Umbraco11\Umbraco11.csproj", "{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umbraco11", "TestSites\Umbraco11\Umbraco11.csproj", "{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{994027DB-19D8-4E81-99C7-51C8F06CD561}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		README.md = README.md
 		umbraco-marketplace.json = umbraco-marketplace.json
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umbraco10", "TestSites\Umbraco10\Umbraco10.csproj", "{0DC36E30-817A-42B9-954F-005CC76FF190}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umbraco9", "TestSites\Umbraco9\Umbraco9.csproj", "{5DB2CDDE-C7FD-494E-891D-C9D455B03796}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestSites", "TestSites", "{0604C901-8E94-49E6-8C19-14182AECCAD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,9 +40,22 @@ Global
 		{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DC36E30-817A-42B9-954F-005CC76FF190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC36E30-817A-42B9-954F-005CC76FF190}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC36E30-817A-42B9-954F-005CC76FF190}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC36E30-817A-42B9-954F-005CC76FF190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB2CDDE-C7FD-494E-891D-C9D455B03796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB2CDDE-C7FD-494E-891D-C9D455B03796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB2CDDE-C7FD-494E-891D-C9D455B03796}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB2CDDE-C7FD-494E-891D-C9D455B03796}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0E20DD80-3DCA-4D3D-BA08-3985AD09B6DD} = {0604C901-8E94-49E6-8C19-14182AECCAD7}
+		{0DC36E30-817A-42B9-954F-005CC76FF190} = {0604C901-8E94-49E6-8C19-14182AECCAD7}
+		{5DB2CDDE-C7FD-494E-891D-C9D455B03796} = {0604C901-8E94-49E6-8C19-14182AECCAD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {87240CD2-D546-4B05-B8AF-52413A150DDF}

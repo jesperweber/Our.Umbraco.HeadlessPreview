@@ -1,8 +1,8 @@
 {
   "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
-  "AlternatePackageNames": [],
+  "AlternatePackageNames": [ "Our Umbraco Headless Preview" ],
   "AuthorDetails": {
-    "Name": "",
+    "Name": "Our.Umbraco.HeadlessPreview",
     "Description": "",
     "Url": "",
     "ImageUrl": "",
@@ -15,9 +15,9 @@
   },
   "Category": "",
   "Description": "",
-  "DocumentationUrl": "",
+  "DocumentationUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview",
   "LicenseTypes": [ "Free" ],
-  "IssueTrackerUrl": "",
+  "IssueTrackerUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/issues",
   "PackageType": "Package",
   "PackagesByAuthor": [],
   "RelatedPackages": [
@@ -32,7 +32,7 @@
       "Caption": ""
     }
   ],
-  "Tags": ["headless", "preview"],
+  "Tags": [ "headless", "preview" ],
   "Title": "",
   "VersionSpecificPackageIds": [
     {
