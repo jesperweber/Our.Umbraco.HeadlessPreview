@@ -1,10 +1,10 @@
 name: CI-CD
+run-name: ${{ github.event.head_commit.message | github.ref_name }}
 
 on:
   create:
     branches: 
       - release/**
-    run-name: Release ${{ github.ref_name }}
   push:
     branches:
     - main
