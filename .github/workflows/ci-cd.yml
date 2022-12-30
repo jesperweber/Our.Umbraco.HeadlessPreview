@@ -4,7 +4,7 @@ on:
   create:
     branches: 
       - release/**
-      - run-name: Workflow ${{ github.ref_name }}
+    run-name: Release ${{ github.ref_name }}
   push:
     branches:
     - main
