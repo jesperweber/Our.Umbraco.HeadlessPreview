@@ -12,10 +12,10 @@ namespace Our.Umbraco.HeadlessPreview.Services
         private readonly IConfiguration _configuration;
 
         private PreviewConfiguration _previewConfiguration;
-        
-        private readonly string _configurationUseUmbracoHostnamesDatabaseKey = "Preview+Configuration+UseUmbracoHostnames";
-        private readonly string _configurationStaticHostnameDatabaseKey = "Preview+Configuration+StaticHostname";
-        private readonly string _configurationSecretDatabaseKey = "Preview+Configuration+Secret";
+
+        private const string ConfigurationUseUmbracoHostnamesDatabaseKey = "HeadlessPreview+Configuration+UseUmbracoHostnames";
+        private const string ConfigurationStaticHostnameDatabaseKey = "HeadlessPreview+Configuration+StaticHostname";
+        private const string ConfigurationSecretDatabaseKey = "HeadlessPreview+Configuration+Secret";
 
         public PreviewConfigurationService(IKeyValueService keyValueService, IConfiguration configuration)
         {
@@ -70,23 +70,23 @@ namespace Our.Umbraco.HeadlessPreview.Services
                 throw new Exception("Configuration value for StaticHostname must be an absolute url");
             }
             
-            _keyValueService.SetValue(_configurationUseUmbracoHostnamesDatabaseKey, configuration.UseUmbracoHostnames.ToString());
-            _keyValueService.SetValue(_configurationStaticHostnameDatabaseKey, configuration.StaticHostname);
-            _keyValueService.SetValue(_configurationSecretDatabaseKey, configuration.Secret);
+            _keyValueService.SetValue(ConfigurationUseUmbracoHostnamesDatabaseKey, configuration.UseUmbracoHostnames.ToString());
+            _keyValueService.SetValue(ConfigurationStaticHostnameDatabaseKey, configuration.StaticHostname);
+            _keyValueService.SetValue(ConfigurationSecretDatabaseKey, configuration.Secret);
 
             _previewConfiguration = configuration;
         }
 
         private PreviewConfiguration GetConfigurationFromSettingsFile()
         {
-            return _configuration.GetSection("Preview").Get<PreviewConfiguration>();
+            return _configuration.GetSection("HeadlessPreview").Get<PreviewConfiguration>();
         }
 
         private PreviewConfiguration GetConfigurationFromDatabase()
         {
-            var useUmbracoHostnamesAsString = _keyValueService.GetValue(_configurationUseUmbracoHostnamesDatabaseKey);
-            var staticHostname = _keyValueService.GetValue(_configurationStaticHostnameDatabaseKey);
-            var secret = _keyValueService.GetValue(_configurationSecretDatabaseKey);
+            var useUmbracoHostnamesAsString = _keyValueService.GetValue(ConfigurationUseUmbracoHostnamesDatabaseKey);
+            var staticHostname = _keyValueService.GetValue(ConfigurationStaticHostnameDatabaseKey);
+            var secret = _keyValueService.GetValue(ConfigurationSecretDatabaseKey);
 
             var configuration = new PreviewConfiguration
             {

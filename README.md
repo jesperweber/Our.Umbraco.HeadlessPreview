@@ -1,6 +1,7 @@
+[![CI-CD](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml)
 # Our.Umbraco.HeadlessPreview
 
-TODO: Desciption
+This package overrides the default Umbraco preview button and lets you configure an alternative preview url.
 
 ## Installation
 
@@ -26,7 +27,25 @@ TODO
 
 ## Configuration
 
-TODO
+The package can be configured using the `appsetings.json` file or using the UI which will save the configuration in the database.
+
+
+| Setting               | Default value     |  Description |
+|----------             |-------------      |------ |
+| `UseUmbracoHostnames` | `false`           | If set to true the domain from the `Culture and Hostnames` for the site is used as preview hostname.<br/><br/>If set to false the value from `StaticHostname` is used. |
+| `StaticHostname`      | -                 | The hostname used for preview if `UseUmbracoHostnames` is set to false. |
+| `Secret`              | -                 | A secret value passed to the preview site for authentication. |
+
+### appsettings.json
+This is typically the preferred way if you have a multi environment setup as you can use environment specific settings.
+
+``` json
+"HeadlessPreview": {
+    "UseUmbracoHostnames": false,
+    "StaticHostname": "https://mysite.com",
+    "Secret": "mySecret"
+}
+```
 
 ## Changelog
 
