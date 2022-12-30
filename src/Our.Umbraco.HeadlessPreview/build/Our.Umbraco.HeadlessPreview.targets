@@ -1,0 +1,27 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <OurUmbracoHeadlessPreviewContentFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\Our.Umbraco.HeadlessPreview\**\*.*</OurUmbracoHeadlessPreviewContentFilesPath>
+    </PropertyGroup>
+
+    <Target Name="CopyOurUmbracoHeadlessPreviewAssets" BeforeTargets="Build">
+        <ItemGroup>
+            <OurUmbracoHeadlessPreviewContentFiles Include="$(OurUmbracoHeadlessPreviewContentFilesPath)" />
+        </ItemGroup>
+        <Message Text="Copying Our.Umbraco.HeadlessPreview files: $(OurUmbracoHeadlessPreviewContentFilesPath) - #@(OurUmbracoHeadlessPreviewContentFiles->Count()) files"  Importance="high" />
+        <Copy
+            SourceFiles="@(OurUmbracoHeadlessPreviewContentFiles)"
+            DestinationFiles="@(OurUmbracoHeadlessPreviewContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\Our.Umbraco.HeadlessPreview\%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true" />
+
+    </Target>
+
+    <Target Name="ClearOurUmbracoHeadlessPreviewAssets" BeforeTargets="Clean">
+        <ItemGroup>
+            <OurUmbracoHeadlessPreviewDir Include="$(MSBuildProjectDirectory)\App_Plugins\Our.Umbraco.HeadlessPreview\" />
+        </ItemGroup>
+        <Message Text="Clear old Our.Umbraco.HeadlessPreview data"  Importance="high" />
+        <RemoveDir Directories="@(OurUmbracoHeadlessPreviewDir)"  />
+    </Target>
+
+</Project>

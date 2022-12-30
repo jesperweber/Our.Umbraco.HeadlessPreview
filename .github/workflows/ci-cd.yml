@@ -37,7 +37,7 @@ jobs:
       shell: pwsh
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
+      uses: NuGet/setup-nuget@v1.1.1
 
     - name: Restore dependencies
       run: nuget restore $SOLUTION
@@ -45,10 +45,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: |
-            5.0
-            6.0
-            7.0
+        dotnet-version: 5.0
 
     - name: Build
       run: dotnet build $PROJECT --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore

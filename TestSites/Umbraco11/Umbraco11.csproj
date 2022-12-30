@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Our.Umbraco.HeadlessPreview" Version="1.0.0-alpha1" />
     <PackageReference Include="Umbraco.Cms" Version="11.0.0" />
   </ItemGroup>
 
@@ -18,10 +19,6 @@
 
   <ItemGroup>
     <Folder Include="App_Plugins\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Our.Umbraco.HeadlessPreview\Our.Umbraco.HeadlessPreview.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
