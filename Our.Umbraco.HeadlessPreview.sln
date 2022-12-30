@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{994027DB-19D8-4E81-99C7-51C8F06CD561}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		azure-pipelines.yml = azure-pipelines.yml
 		CHANGELOG.md = CHANGELOG.md
 		.github\workflows\ci-cd.yml = .github\workflows\ci-cd.yml
 		GetBuildVersion.psm1 = GetBuildVersion.psm1
