@@ -1,10 +1,10 @@
 name: CI-CD
-run-name: Workflow ${{ github.ref_name }}
 
 on:
   create:
     branches: 
       - release/**
+      - run-name: Workflow ${{ github.ref_name }}
   push:
     branches:
     - main
