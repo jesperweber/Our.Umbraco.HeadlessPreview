@@ -25,74 +25,14 @@
 		<PackageReference Include="Umbraco.Cms.Web.Common" Version="11.0.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="App_Plugins\Our.Umbraco.HeadlessPreview\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\Dashboard.Sub.Controllers\configuration.controller.js" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\js\headlessPreview.decorator.js" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\js\headlessPreview.service.js" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\lang\en-US.xml" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\package.manifest" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\settings-dashboard.controller.js" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\settings-dashboard.html" />
-    <None Remove="App_Plugins\Our.Umbraco.HeadlessPreview\styles.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Api\" />
-    <Folder Include="Dashboard\" />
-    <Folder Include="Composers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\js\resources.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\js\headlessPreview.decorator.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\js\headlessPreview.service.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\js\configuration.controller.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\views\configuration.html">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\lang\en-US.xml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\package.manifest">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\Our.Umbraco.HeadlessPreview\style\styles.css">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+		<Content Include="App_Plugins\Our.Umbraco.HeadlessPreview\**\*.*">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+        <None Include="build\**\*.*">
+	        <Pack>True</Pack>
+	        <PackagePath>buildTransitive</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>
