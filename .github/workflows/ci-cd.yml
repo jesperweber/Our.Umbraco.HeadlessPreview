@@ -21,10 +21,6 @@ jobs:
       
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        dotnet: [ '5.0', '6.0', '7.0' ]
-
     steps:
     - uses: actions/checkout@v3
     
