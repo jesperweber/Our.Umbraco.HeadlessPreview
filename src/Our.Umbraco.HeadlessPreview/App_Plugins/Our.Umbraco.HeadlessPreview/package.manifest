@@ -8,7 +8,6 @@
 		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/headlessPreview.service.js",
 		// Controllers
 		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/configuration.controller.js",
-
 		// Resources
 		"~/App_Plugins/Our.Umbraco.HeadlessPreview/js/resources.js"
 	],

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Our.Umbraco.HeadlessPreview.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
@@ -11,15 +12,13 @@ namespace Our.Umbraco.HeadlessPreview.Extensions
         /// <summary>
         /// Unpublished pages don't have a url, so we build it our self
         /// </summary>
-        public static Uri BuildUrlForUnpublishedNode(this IPublishedContent publishedContent, IUmbracoContextFactory umbracoContextFactory, IDomainService domainService)
+        public static Uri BuildUrlForUnpublishedNode(this IPublishedContent publishedContent, PreviewConfiguration previewConfiguration, IUmbracoContextFactory umbracoContextFactory, IDomainService domainService)
         {
             using var contextReference = umbracoContextFactory.EnsureUmbracoContext();
 
             var contentCache = contextReference.UmbracoContext.Content;
             if (contentCache is null)
                 throw new Exception("contentCache is null");
-
-            var originalRequestUrl = contextReference.UmbracoContext.OriginalRequestUrl;
 
             // The structure of route is: rootNodeId/urlSegment1/urlSegment2/...
             var route = contentCache.GetRouteById(true, publishedContent.Id);
@@ -29,11 +28,21 @@ namespace Our.Umbraco.HeadlessPreview.Extensions
             int.TryParse(route.Substring(0, route.IndexOf('/')), out var rootNodeId);
             var path = route.Substring(route.IndexOf('/'));
 
-            var domain = domainService.GetAssignedDomains(rootNodeId, false).FirstOrDefault();
+            string hostname;
+            if (previewConfiguration.UseUmbracoHostnames)
+            {
+                var domain = domainService.GetAssignedDomains(rootNodeId, false).FirstOrDefault();
+                hostname = domain?.DomainName;
+            }
+            else
+            {
+                hostname = previewConfiguration.StaticHostname;
+            }
 
-            return domain == null
-                ? new Uri($"{originalRequestUrl.GetLeftPart(UriPartial.Authority)}/{path.TrimStart('/')}")
-                : new Uri($"{domain.DomainName.TrimEnd('/')}/{path.TrimStart('/')}");
+            if (string.IsNullOrWhiteSpace(hostname))
+                return null;
+
+            return new Uri($"{hostname.TrimEnd('/')}/{path.TrimStart('/')}");
         }
     }
 }

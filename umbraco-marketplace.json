@@ -1,31 +1,14 @@
 {
   "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
-  "AlternatePackageNames": [ "Our Umbraco Headless Preview" ],
   "AuthorDetails": {
-    "Name": "Our.Umbraco.HeadlessPreview",
-    "Description": "",
-    "Url": "",
-    "ImageUrl": "",
-    "Contributors": [
-      {
-        "Name": "",
-        "Url": ""
-      }
-    ]
+    "Name": "Jesper Weber"
   },
-  "Category": "",
-  "Description": "",
+  "Category": "Headless",
+  "Description": "This package overrides the default Umbraco preview button and lets you configure an alternative preview url.",
   "DocumentationUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview",
   "LicenseTypes": [ "Free" ],
   "IssueTrackerUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/issues",
   "PackageType": "Package",
-  "PackagesByAuthor": [],
-  "RelatedPackages": [
-    {
-      "PackageId": "",
-      "Description": ""
-    }
-  ],
   "Screenshots": [
     {
       "ImageUrl": "",
@@ -33,11 +16,5 @@
     }
   ],
   "Tags": [ "headless", "preview" ],
-  "Title": "",
-  "VersionSpecificPackageIds": [
-    {
-      "UmbracoMajorVersion": 8,
-      "PackageId": ""
-    }
-  ]
+  "Title": "Our.Umbraco.HeadlessPreview"
 }

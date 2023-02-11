@@ -21,10 +21,6 @@ Using the Package Manager
 Install-Package Our.Umbraco.HeadlessPreview -Version <version>
 ```
 
-## Registration
-
-TODO
-
 ## Configuration
 
 The package can be configured using the `appsetings.json` file or using the UI which will save the configuration in the database.
@@ -33,8 +29,10 @@ The package can be configured using the `appsetings.json` file or using the UI w
 | Setting               | Default value     |  Description |
 |----------             |-------------      |------ |
 | `UseUmbracoHostnames` | `false`           | If set to true the domain from the `Culture and Hostnames` for the site is used as preview hostname.<br/><br/>If set to false the value from `StaticHostname` is used. |
-| `StaticHostname`      | -                 | The hostname used for preview if `UseUmbracoHostnames` is set to false. |
-| `Secret`              | -                 | A secret value passed to the preview site for authentication. |
+| `StaticHostname`      | `''`                 | The hostname used for preview if `UseUmbracoHostnames` is set to false. |
+| `Secret`              | `''`                 | A secret value passed to the preview site for authentication. |
+
+### UI
 
 ### appsettings.json
 This is typically the preferred way if you have a multi environment setup as you can use environment specific settings.

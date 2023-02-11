@@ -5,7 +5,7 @@
         changePreviewButton: function (data) {
 
             var openPreview = (page) => {
-                window.open("/headless/preview?id=" + page.id);
+                window.open("/umbraco/backoffice/headlesspreview?id=" + page.id);
             }
 
             var interval = setInterval(function () {
