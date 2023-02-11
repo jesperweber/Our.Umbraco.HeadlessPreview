@@ -62,7 +62,7 @@ jobs:
         # Note-worthy description of changes in release
         #body: # optional
         # Path to load note-worthy description of changes in release from
-        body_path: '/releaseNotest/${{BUILD_VERSION}}.md'
+        body_path: /releaseNotest/$BUILD_VERSION.md
         # Gives the release a custom name. Defaults to tag name
         name: $BUILD_VERSION
         # Gives a tag name. Defaults to github.GITHUB_REF
