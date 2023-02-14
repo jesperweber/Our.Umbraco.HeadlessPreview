@@ -16,6 +16,7 @@ jobs:
   build:
 
     env:
+      TEST_VERSION: '1.0.0-alpha-5'
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Our.Umbraco.HeadlessPreview.sln'
       PROJECT: 'src/Our.Umbraco.HeadlessPreview/*.csproj'
@@ -64,7 +65,7 @@ jobs:
         # Path to load note-worthy description of changes in release from
         #body_path: /releaseNotest/$BUILD_VERSION.md
         # Gives the release a custom name. Defaults to tag name
-        name: $BUILD_VERSION
+        name: $TEST_VERSION
         # Gives a tag name. Defaults to github.GITHUB_REF
         tag_name: $BUILD_VERSION
         # Creates a draft release. Defaults to false
