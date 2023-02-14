@@ -1,4 +1,6 @@
-[![CI-CD](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml)
+[![CI-CD](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/actions/workflows/ci-cd.yml) 
+[![NuGet](https://img.shields.io/nuget/v/Our.Umbraco.HeadlessPreview)](https://www.nuget.org/packages/Our.Umbraco.HeadlessPreview) 
+
 # Our.Umbraco.HeadlessPreview
 
 This package overrides the default Umbraco preview button and lets you configure an alternative preview url.
