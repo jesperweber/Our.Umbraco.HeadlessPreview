@@ -48,15 +48,15 @@ jobs:
     - name: Build
       run: dotnet build $PROJECT --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
 
-    #- name: Run tests
-    #  run: dotnet test /p:Configuration=$env:BUILD_CONFIG --no-restore --no-build --verbosity normal
+    - name: Run tests
+      run: dotnet test /p:Configuration=$env:BUILD_CONFIG --no-restore --no-build --verbosity normal
       
-    # - name: Publish on nuget.org
-    #   if: startsWith(github.ref, 'refs/heads/release')
-    #   run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+    - name: Publish on nuget.org
+      if: startsWith(github.ref, 'refs/heads/release')
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
       
     - name: Create Github release
-      # if: startsWith(github.ref, 'refs/heads/release')
+      if: startsWith(github.ref, 'refs/heads/release')
       # You may pin to the exact commit or the version.
       # uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
       uses: softprops/action-gh-release@v0.1.15
