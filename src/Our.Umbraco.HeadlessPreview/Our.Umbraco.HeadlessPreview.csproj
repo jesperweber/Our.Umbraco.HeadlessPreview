@@ -5,7 +5,8 @@
 		<Product>Our.Umbraco.HeadlessPreview</Product>
 		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
 		<Title>Our.Umbraco.HeadlessPreview</Title>
-		<Description>...</Description>
+		<Description>```bash
+</Description>
 		<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
