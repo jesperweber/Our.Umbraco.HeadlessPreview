@@ -65,7 +65,7 @@ jobs:
         # Path to load note-worthy description of changes in release from
         #body_path: /releaseNotest/$BUILD_VERSION.md
         # Gives the release a custom name. Defaults to tag name
-        name: $TEST_VERSION
+        name: ${{ TEST_VERSION }}
         # Gives a tag name. Defaults to github.GITHUB_REF
         tag_name: $BUILD_VERSION
         # Creates a draft release. Defaults to false
