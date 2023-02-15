@@ -36,6 +36,10 @@ The package can be configured using the `appsetings.json` file or using the UI w
 
 ### UI
 
+If you just have a single environment it's easy to just configure the plugin directly from the Umbraco Backoffice in the Settings section.
+
+![Configuration](https://raw.githubusercontent.com/jesperweber/Our.Umbraco.HeadlessPreview/main/screenshots/Settings.png "Title")
+
 ### appsettings.json
 This is typically the preferred way if you have a multi environment setup as you can use environment specific settings.
 
