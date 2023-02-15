@@ -11,8 +11,8 @@
   "PackageType": "Package",
   "Screenshots": [
     {
-      "ImageUrl": "",
-      "Caption": ""
+      "ImageUrl": "https://raw.githubusercontent.com/jesperweber/Our.Umbraco.HeadlessPreview/main/screenshots/Settings.png",
+      "Caption": "The configuration can be entered in the Umbraco backoffice and stored in the database or it can be configured in the appsettings.json file."
     }
   ],
   "Tags": [ "headless", "preview" ],
