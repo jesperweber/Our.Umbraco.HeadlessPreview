@@ -5,8 +5,7 @@
 		<Product>Our.Umbraco.HeadlessPreview</Product>
 		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
 		<Title>Our.Umbraco.HeadlessPreview</Title>
-		<Description>```bash
-</Description>
+		<Description>This package overrides the default Umbraco preview button and lets you configure an alternative preview url.</Description>
 		<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
