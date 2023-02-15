@@ -4,6 +4,7 @@
     "Name": "Jesper Weber"
   },
   "Category": "Headless",
+  "LicenseType": "Free",
   "Description": "This package overrides the default Umbraco preview button and lets you configure an alternative preview url.",
   "DocumentationUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview",
   "LicenseTypes": [ "Free" ],

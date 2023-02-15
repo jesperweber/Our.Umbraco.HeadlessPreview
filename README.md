@@ -49,7 +49,7 @@ This is typically the preferred way if you have a multi environment setup as you
 
 ## Changelog
 
-See new features, fixes and breaking changes in the [changelog](./CHANGELOG.md).
+See new features, fixes and breaking changes in the [changelog](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/blob/main/CHANGELOG.md).
 
 
 ## Contributing
@@ -63,4 +63,4 @@ Otherwise you are welcome to open an Issue in our [issue tracker](https://github
 
 ## License
 
-Our.Umbraco.HeadlessPreview is [MIT licensed](./LICENSE)
+Our.Umbraco.HeadlessPreview is [MIT licensed](https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/blob/main/LICENSE)
