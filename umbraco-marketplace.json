@@ -4,7 +4,7 @@
     "Name": "Jesper Weber"
   },
   "Category": "Headless",
-  "Description": "This package overrides the default Umbraco preview button and lets you configure an alternative preview url.",
+  "Description": "This package overrides the default Umbraco preview button and lets you configure an alternative preview url. This way editors can easily access preview in a headless setup",
   "DocumentationUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview",
   "LicenseTypes": [ "Free" ],
   "IssueTrackerUrl": "https://github.com/jesperweber/Our.Umbraco.HeadlessPreview/issues",
