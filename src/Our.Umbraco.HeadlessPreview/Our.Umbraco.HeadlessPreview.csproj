@@ -10,6 +10,8 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
