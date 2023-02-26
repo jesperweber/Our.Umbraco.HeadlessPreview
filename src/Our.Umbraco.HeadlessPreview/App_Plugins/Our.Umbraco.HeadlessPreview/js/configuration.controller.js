@@ -1,4 +1,4 @@
-﻿function configurationController(dashboardResources, notificationsService, $scope, $filter, $timeout) {
+﻿function ConfigurationController(headlessPreviewDashboardResources, notificationsService, $scope) {
     var vm = this;
     vm.loadingConfiguration = false;
     vm.buttonState = null;
@@ -15,7 +15,7 @@
     vm.getConfiguration = function () {
         vm.loadingConfiguration = true;
         vm.buttonState = "busy";
-        dashboardResources.getConfiguration()
+        headlessPreviewDashboardResources.getConfiguration()
             .then(function (result) {
                 if (result.data.isSuccess) {
                     vm.configuration.useUmbracoHostnames = result.data.data.useUmbracoHostnames;
@@ -36,7 +36,7 @@
             return;
         }
 
-        dashboardResources.saveConfiguration(vm.configuration)
+        headlessPreviewDashboardResources.saveConfiguration(vm.configuration)
             .then(function (result) {
                 if (result.data.success) {
                     notificationsService.success("Configuration saved");
@@ -74,4 +74,4 @@
     init();
 }
 
-angular.module("umbraco").controller("ConfigurationController", configurationController);
+angular.module("umbraco").controller("HeadlessPreview.ConfigurationController", ConfigurationController);

@@ -1,5 +1,5 @@
 ﻿angular.module('umbraco.resources')
-    .factory('dashboardResources',
+    .factory('headlessPreviewDashboardResources',
         function ($http) {
             return {
                 getConfiguration: function () {

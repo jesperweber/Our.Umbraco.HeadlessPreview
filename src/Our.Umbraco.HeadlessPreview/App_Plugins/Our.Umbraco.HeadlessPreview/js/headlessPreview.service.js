@@ -1,7 +1,6 @@
 ﻿function previewService() {
 
     return {
-
         changePreviewButton: function (data) {
 
             var openPreview = (page) => {
@@ -28,4 +27,4 @@
         }
     };
 }
-angular.module('umbraco.services').factory('previewService', previewService);
+angular.module('umbraco.services').factory('headlessPreviewService', previewService);
