@@ -44,28 +44,28 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
 
             var previewConfiguration = _previewConfigurationService.GetConfiguration();
 
-            Uri uri;
+            Uri nodeUrl;
             using (var contextReference = _umbracoContextFactory.EnsureUmbracoContext())
             {
                 var publishedContent = contextReference.UmbracoContext.Content?.GetById(true, nodeId);
-                uri = publishedContent?.BuildUrlForUnpublishedNode(previewConfiguration, _umbracoContextFactory, _domainService);
+                nodeUrl = publishedContent?.BuildUrlForUnpublishedNode(previewConfiguration, _umbracoContextFactory, _domainService);
             }
 
-            if (uri == null)
+            if (nodeUrl == null)
             {
                 _logger.LogError("No domain has been set for the Umbraco site. Set a domain in Culture and Hostnames for the site root node.");
                 await HttpContext.Response.WriteAsync("No domain has been set for the Umbraco site. Set a domain in Culture and Hostnames for the site root node.");
                 return;
             }
 
-            var domain = uri.GetLeftPart(UriPartial.Authority);
-            var path = uri.AbsolutePath.TrimEnd('/');
+            var domain = nodeUrl.GetLeftPart(UriPartial.Authority);
+            var path = nodeUrl.AbsolutePath.TrimEnd('/');
 
             var parametersToAdd = new Dictionary<string, string> { { "slug", path } };
             if(!string.IsNullOrWhiteSpace(previewConfiguration.Secret))
                 parametersToAdd.Add("secret", previewConfiguration.Secret);
             
-            var redirectUrl = QueryHelpers.AddQueryString($"{domain}/api/preview", parametersToAdd);
+            var redirectUrl = QueryHelpers.AddQueryString($"{domain}/{previewConfiguration.RelativePath.Trim().TrimStart('/')}", parametersToAdd);
             
             HttpContext.Response.Redirect(redirectUrl, false);
         }

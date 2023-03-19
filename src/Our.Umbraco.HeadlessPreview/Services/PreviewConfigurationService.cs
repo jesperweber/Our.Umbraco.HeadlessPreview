@@ -15,6 +15,7 @@ namespace Our.Umbraco.HeadlessPreview.Services
 
         private const string ConfigurationUseUmbracoHostnamesDatabaseKey = "HeadlessPreview+Configuration+UseUmbracoHostnames";
         private const string ConfigurationStaticHostnameDatabaseKey = "HeadlessPreview+Configuration+StaticHostname";
+        private const string ConfigurationRelativePathDatabaseKey = "HeadlessPreview+Configuration+RelativePath";
         private const string ConfigurationSecretDatabaseKey = "HeadlessPreview+Configuration+Secret";
 
         public PreviewConfigurationService(IKeyValueService keyValueService, IConfiguration configuration)
@@ -72,6 +73,7 @@ namespace Our.Umbraco.HeadlessPreview.Services
             
             _keyValueService.SetValue(ConfigurationUseUmbracoHostnamesDatabaseKey, configuration.UseUmbracoHostnames.ToString());
             _keyValueService.SetValue(ConfigurationStaticHostnameDatabaseKey, configuration.StaticHostname);
+            _keyValueService.SetValue(ConfigurationRelativePathDatabaseKey, configuration.RelativePath);
             _keyValueService.SetValue(ConfigurationSecretDatabaseKey, configuration.Secret);
 
             _previewConfiguration = configuration;
@@ -79,18 +81,27 @@ namespace Our.Umbraco.HeadlessPreview.Services
 
         private PreviewConfiguration GetConfigurationFromSettingsFile()
         {
-            return _configuration.GetSection("HeadlessPreview").Get<PreviewConfiguration>();
+            var configuration = _configuration.GetSection("HeadlessPreview").Get<PreviewConfiguration>();
+
+            if (configuration is not null)
+            {
+                configuration.RelativePath ??= "api/preview";
+            }
+
+            return configuration;
         }
 
         private PreviewConfiguration GetConfigurationFromDatabase()
         {
             var useUmbracoHostnamesAsString = _keyValueService.GetValue(ConfigurationUseUmbracoHostnamesDatabaseKey);
             var staticHostname = _keyValueService.GetValue(ConfigurationStaticHostnameDatabaseKey);
+            var relativePath = _keyValueService.GetValue(ConfigurationRelativePathDatabaseKey);
             var secret = _keyValueService.GetValue(ConfigurationSecretDatabaseKey);
 
             var configuration = new PreviewConfiguration
             {
                 StaticHostname = staticHostname,
+                RelativePath = relativePath ?? "api/preview",
                 Secret = secret
             };
 

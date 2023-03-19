@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="configuration-dashboard-property">
-                        <label for="use-umbraco-hostnames">Use Umbraco Hostnames</label><br/>
+                        <label for="use-umbraco-hostnames">Use Umbraco Hostnames</label><br />
 
                         <button role="checkbox" type="button" class="umb-toggle"
                                 ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"
@@ -43,12 +43,20 @@
                         </button>
                     </div>
                     <div class="configuration-dashboard-property" ng-if="!vm.configuration.useUmbracoHostnames">
-                        <label for="static-hostname">Static Hostname</label><br/>
-                        <input type="text" id="static-hostname" class="input-field" ng-model="vm.configuration.staticHostname" placeholder="Static Hostname" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"/>
+                        <label for="static-hostname">Static Hostname</label><br />
+                        <input type="text" id="static-hostname" class="input-field" ng-change="vm.updateTemplateUrl()" ng-model="vm.configuration.staticHostname" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile" />
                     </div>
                     <div class="configuration-dashboard-property">
-                        <label for="secret">Secret</label><br/>
-                        <input type="text" id="secret" class="input-field" ng-model="vm.configuration.secret" placeholder="Secret" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile"/>
+                        <label for="relative-path">Relative Path</label><br />
+                        <input type="text" id="relative-path" class="input-field" ng-change="vm.updateTemplateUrl()" ng-model="vm.configuration.relativePath" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile" />
+                    </div>
+                    <div class="configuration-dashboard-property">
+                        <label for="secret">Secret</label><br />
+                        <input type="text" id="secret" class="input-field" ng-change="vm.updateTemplateUrl()" ng-model="vm.configuration.secret" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile" />
+                    </div>
+                    <div class="configuration-dashboard-property">
+                        <label>Configured Preview URL</label><br />
+                        <span>{{vm.configuration.templateUrl}}</span>
                     </div>
 
                     <umb-button ng-if="!vm.configuration.configuredFromSettingsFile" action="vm.saveConfiguration()"

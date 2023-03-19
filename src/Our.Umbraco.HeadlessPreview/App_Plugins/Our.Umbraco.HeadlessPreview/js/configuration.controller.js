@@ -10,6 +10,19 @@
 
     vm.toggleUseUmbracoHostnames = function () {
         vm.configuration.useUmbracoHostnames = !vm.configuration.useUmbracoHostnames;
+        vm.updateTemplateUrl();
+    }
+
+    vm.updateTemplateUrl = function () {
+
+        var hostname = vm.configuration.useUmbracoHostnames ? "[siteHostname]" : vm.configuration.staticHostname?.trimEnd('/');
+        var relativePath = vm.configuration.relativePath?.trimStart('/');
+
+        var parametersToAdd = "?slug=[relativePathOfPage]";
+        if (vm.configuration.secret)
+            parametersToAdd += "&secret=" + vm.configuration.secret;
+
+        vm.configuration.templateUrl = hostname + "/" + relativePath + parametersToAdd
     }
 
     vm.getConfiguration = function () {
@@ -20,10 +33,13 @@
                 if (result.data.isSuccess) {
                     vm.configuration.useUmbracoHostnames = result.data.data.useUmbracoHostnames;
                     vm.configuration.staticHostname = result.data.data.staticHostname;
+                    vm.configuration.relativePath = result.data.data.relativePath;
                     vm.configuration.secret = result.data.data.secret;
                     vm.configuration.configuredFromSettingsFile = result.data.data.configuredFromSettingsFile;
                     vm.loadingConfiguration = false;
                     vm.buttonState = null;
+
+                    vm.updateTemplateUrl();
                 }
             });
     };
