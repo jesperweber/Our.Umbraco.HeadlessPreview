@@ -43,7 +43,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0
+        dotnet-version: |
+            5.0
+            6.0
+            7.0
 
     - name: Build
       run: dotnet build $PROJECT --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
