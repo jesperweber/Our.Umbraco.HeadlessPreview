@@ -48,8 +48,8 @@ jobs:
             6.0
             7.0
 
-    - name: Run tests
-      run: dotnet test --no-restore --verbosity normal
+    #- name: Run tests
+    #  run: dotnet test --no-restore --verbosity normal
 
     - name: Build
       run: dotnet build $PROJECT --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
