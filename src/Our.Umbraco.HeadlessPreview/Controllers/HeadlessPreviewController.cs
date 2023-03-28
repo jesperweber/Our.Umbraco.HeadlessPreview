@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Our.Umbraco.HeadlessPreview.Extensions;
 using Our.Umbraco.HeadlessPreview.Services;
@@ -11,6 +7,8 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
+using Our.Umbraco.HeadlessPreview.Models;
+using Umbraco.Extensions;
 
 namespace Our.Umbraco.HeadlessPreview.Controllers
 {
@@ -20,19 +18,22 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
         private readonly IUmbracoContextFactory _umbracoContextFactory;
         private readonly IDomainService _domainService;
         private readonly IPreviewConfigurationService _previewConfigurationService;
+        private readonly ITemplateUrlParser _templateUrlParser;
         private readonly ILogger<HeadlessPreviewController> _logger;
 
         public HeadlessPreviewController(IUmbracoContextFactory umbracoContextFactory, IDomainService domainService, 
-            IPreviewConfigurationService previewConfigurationService, ILogger<HeadlessPreviewController> logger)
+            IPreviewConfigurationService previewConfigurationService, ITemplateUrlParser templateUrlParser, 
+            ILogger<HeadlessPreviewController> logger)
         {
             _umbracoContextFactory = umbracoContextFactory;
             _domainService = domainService;
             _previewConfigurationService = previewConfigurationService;
+            _templateUrlParser = templateUrlParser;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task Index()
+        public void Index()
         {
             if (!_previewConfigurationService.IsConfigured())
             {
@@ -41,31 +42,29 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
             }
 
             int.TryParse(HttpContext.Request.Query["id"], out var nodeId);
+            var culture = HttpContext.Request.Query["culture"].ToString();
 
             var previewConfiguration = _previewConfigurationService.GetConfiguration();
+            var placeHolders = _templateUrlParser.GetPlaceHolders(previewConfiguration.TemplateUrl);
 
-            Uri nodeUrl;
+            var hostname = string.Empty;
+            string nodePath;
             using (var contextReference = _umbracoContextFactory.EnsureUmbracoContext())
             {
                 var publishedContent = contextReference.UmbracoContext.Content?.GetById(true, nodeId);
-                nodeUrl = publishedContent?.BuildUrlForUnpublishedNode(previewConfiguration, _umbracoContextFactory, _domainService);
+                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory); 
+                
+                if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
+                {
+                    foreach (var parentOrSelf in publishedContent.AncestorsOrSelf())
+                    {
+                        var domain = _domainService.GetAssignedDomains(parentOrSelf.Id, false).FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
+                        hostname = domain?.DomainName;
+                    }
+                }
             }
-
-            if (nodeUrl == null)
-            {
-                _logger.LogError("No domain has been set for the Umbraco site. Set a domain in Culture and Hostnames for the site root node.");
-                await HttpContext.Response.WriteAsync("No domain has been set for the Umbraco site. Set a domain in Culture and Hostnames for the site root node.");
-                return;
-            }
-
-            var domain = nodeUrl.GetLeftPart(UriPartial.Authority);
-            var path = nodeUrl.AbsolutePath.TrimEnd('/');
-
-            var parametersToAdd = new Dictionary<string, string> { { "slug", path } };
-            if(!string.IsNullOrWhiteSpace(previewConfiguration.Secret))
-                parametersToAdd.Add("secret", previewConfiguration.Secret);
             
-            var redirectUrl = QueryHelpers.AddQueryString($"{domain}/{previewConfiguration.RelativePath.Trim().TrimStart('/')}", parametersToAdd);
+            var redirectUrl = _templateUrlParser.Parse(previewConfiguration.TemplateUrl, hostname, nodePath);
             
             HttpContext.Response.Redirect(redirectUrl, false);
         }

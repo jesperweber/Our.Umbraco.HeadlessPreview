@@ -14,3 +14,7 @@
 #headlessPreviewDashboard .configuration-dashboard-property input {
 	width: 750px;
 }
+
+#headlessPreviewDashboard .configuration-dashboard-property select {
+	width: 750px;
+}

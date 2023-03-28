@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		umbraco-marketplace.json = umbraco-marketplace.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.HeadlessPreview.Tests", "src\Our.Umbraco.HeadlessPreview.Tests\Our.Umbraco.HeadlessPreview.Tests.csproj", "{A5161DF7-36B2-4550-A100-51C7BA2F77CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B99C534A-9DBE-4A80-8E70-0C9227F3BC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99C534A-9DBE-4A80-8E70-0C9227F3BC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B99C534A-9DBE-4A80-8E70-0C9227F3BC44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5161DF7-36B2-4550-A100-51C7BA2F77CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5161DF7-36B2-4550-A100-51C7BA2F77CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5161DF7-36B2-4550-A100-51C7BA2F77CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5161DF7-36B2-4550-A100-51C7BA2F77CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

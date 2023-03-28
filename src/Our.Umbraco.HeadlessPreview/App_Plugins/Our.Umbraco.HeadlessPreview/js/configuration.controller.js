@@ -8,49 +8,22 @@
         vm.getConfiguration();
     }
 
-    vm.toggleUseUmbracoHostnames = function () {
-        vm.configuration.useUmbracoHostnames = !vm.configuration.useUmbracoHostnames;
-        vm.updateTemplateUrl();
-    }
-
-    vm.updateTemplateUrl = function () {
-
-        var hostname = vm.configuration.useUmbracoHostnames ? "[siteHostname]" : vm.configuration.staticHostname?.trimEnd('/');
-        var relativePath = vm.configuration.relativePath?.trimStart('/');
-
-        var parametersToAdd = "?slug=[relativePathOfPage]";
-        if (vm.configuration.secret)
-            parametersToAdd += "&secret=" + vm.configuration.secret;
-
-        vm.configuration.templateUrl = hostname + "/" + relativePath + parametersToAdd
-    }
-
     vm.getConfiguration = function () {
         vm.loadingConfiguration = true;
         vm.buttonState = "busy";
         headlessPreviewDashboardResources.getConfiguration()
             .then(function (result) {
                 if (result.data.isSuccess) {
-                    vm.configuration.useUmbracoHostnames = result.data.data.useUmbracoHostnames;
-                    vm.configuration.staticHostname = result.data.data.staticHostname;
-                    vm.configuration.relativePath = result.data.data.relativePath;
-                    vm.configuration.secret = result.data.data.secret;
+                    vm.configuration.templateUrl = result.data.data.templateUrl;
                     vm.configuration.configuredFromSettingsFile = result.data.data.configuredFromSettingsFile;
                     vm.loadingConfiguration = false;
                     vm.buttonState = null;
-
-                    vm.updateTemplateUrl();
                 }
             });
     };
 
     vm.saveConfiguration = function () {
         vm.buttonState = "busy";
-        if (!vm.configuration.useUmbracoHostnames && !vm.configuration.staticHostname) {
-            notificationsService.error("You must add a static hostname if you are not using Umbraco hostnames");
-            vm.buttonState = null;
-            return;
-        }
 
         headlessPreviewDashboardResources.saveConfiguration(vm.configuration)
             .then(function (result) {

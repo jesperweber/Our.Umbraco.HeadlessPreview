@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using Our.Umbraco.HeadlessPreview.Extensions;
 using Our.Umbraco.HeadlessPreview.Models;
 using Umbraco.Cms.Core.Services;
 
@@ -13,10 +12,7 @@ namespace Our.Umbraco.HeadlessPreview.Services
 
         private PreviewConfiguration _previewConfiguration;
 
-        private const string ConfigurationUseUmbracoHostnamesDatabaseKey = "HeadlessPreview+Configuration+UseUmbracoHostnames";
-        private const string ConfigurationStaticHostnameDatabaseKey = "HeadlessPreview+Configuration+StaticHostname";
-        private const string ConfigurationRelativePathDatabaseKey = "HeadlessPreview+Configuration+RelativePath";
-        private const string ConfigurationSecretDatabaseKey = "HeadlessPreview+Configuration+Secret";
+        private const string ConfigurationTemplateUrlDatabaseKey = "HeadlessPreview+Configuration+TemplateUrl";
 
         public PreviewConfigurationService(IKeyValueService keyValueService, IConfiguration configuration)
         {
@@ -49,10 +45,7 @@ namespace Our.Umbraco.HeadlessPreview.Services
             if (configuration == null)
                 return false;
 
-            if (!configuration.UseUmbracoHostnames && string.IsNullOrWhiteSpace(configuration.StaticHostname))
-                return false;
-
-            if (string.IsNullOrWhiteSpace(configuration.Secret))
+            if (string.IsNullOrWhiteSpace(configuration.TemplateUrl))
                 return false;
 
             return true;
@@ -61,20 +54,9 @@ namespace Our.Umbraco.HeadlessPreview.Services
         public void Save(PreviewConfiguration configuration)
         {
             if (configuration == null)
-            {
                 return;
-            }
 
-            configuration.StaticHostname = configuration.StaticHostname.TrimEnd('/');
-            if (!configuration.UseUmbracoHostnames && !configuration.StaticHostname.IsAbsoluteUrl())
-            {
-                throw new Exception("Configuration value for StaticHostname must be an absolute url");
-            }
-            
-            _keyValueService.SetValue(ConfigurationUseUmbracoHostnamesDatabaseKey, configuration.UseUmbracoHostnames.ToString());
-            _keyValueService.SetValue(ConfigurationStaticHostnameDatabaseKey, configuration.StaticHostname);
-            _keyValueService.SetValue(ConfigurationRelativePathDatabaseKey, configuration.RelativePath);
-            _keyValueService.SetValue(ConfigurationSecretDatabaseKey, configuration.Secret);
+            _keyValueService.SetValue(ConfigurationTemplateUrlDatabaseKey, configuration.TemplateUrl);
 
             _previewConfiguration = configuration;
         }
@@ -85,7 +67,7 @@ namespace Our.Umbraco.HeadlessPreview.Services
 
             if (configuration is not null)
             {
-                configuration.RelativePath ??= "api/preview";
+                configuration.TemplateUrl ??= "{hostname}/api/preview?slug={slug}&secret=MySecret";
             }
 
             return configuration;
@@ -93,22 +75,12 @@ namespace Our.Umbraco.HeadlessPreview.Services
 
         private PreviewConfiguration GetConfigurationFromDatabase()
         {
-            var useUmbracoHostnamesAsString = _keyValueService.GetValue(ConfigurationUseUmbracoHostnamesDatabaseKey);
-            var staticHostname = _keyValueService.GetValue(ConfigurationStaticHostnameDatabaseKey);
-            var relativePath = _keyValueService.GetValue(ConfigurationRelativePathDatabaseKey);
-            var secret = _keyValueService.GetValue(ConfigurationSecretDatabaseKey);
+            var templateUrl = _keyValueService.GetValue(ConfigurationTemplateUrlDatabaseKey);
 
             var configuration = new PreviewConfiguration
             {
-                StaticHostname = staticHostname,
-                RelativePath = relativePath ?? "api/preview",
-                Secret = secret
+                TemplateUrl = templateUrl
             };
-
-            if (bool.TryParse(useUmbracoHostnamesAsString, out var useUmbracoHostnames))
-            {
-                configuration.UseUmbracoHostnames = useUmbracoHostnames;
-            }
 
             return configuration;
         }

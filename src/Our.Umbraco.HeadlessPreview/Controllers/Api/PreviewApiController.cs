@@ -33,17 +33,6 @@ namespace Our.Umbraco.HeadlessPreview.Controllers.Api
         [HttpPost]
         public IActionResult SaveConfiguration(PreviewConfiguration configuration)
         {
-            if (!configuration.UseUmbracoHostnames && string.IsNullOrEmpty(configuration.StaticHostname))
-            {
-                return BadRequest(
-                    new Response
-                    {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        Success = false,
-                        Message = "Configuration is configured to not not use Umbraco hostnames but no static hostname has been set."
-                    });
-            }
-
             try
             {
                 _previewConfigurationService.Save(configuration);

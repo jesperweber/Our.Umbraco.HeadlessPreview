@@ -35,6 +35,7 @@ namespace Our.Umbraco.HeadlessPreview.Composers
             });
 
             builder.Services.AddSingleton<IPreviewConfigurationService, PreviewConfigurationService>();
+            builder.Services.AddSingleton<ITemplateUrlParser, TemplateUrlParser>();
         }
     }
 }

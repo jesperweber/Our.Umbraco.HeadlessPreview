@@ -2,9 +2,14 @@
 
     return {
         changePreviewButton: function (data) {
-
             var openPreview = (page) => {
-                window.open("/umbraco/backoffice/headlesspreview?id=" + page.id);
+                window.open("/umbraco/backoffice/headlesspreview?id=" + page.id + "&culture=" + tryGetCulture(page));
+            }
+
+            var tryGetCulture = (page) => {
+                var culture = page?.variants.find(variant => variant.active)?.language?.culture;
+
+                return culture ?? '';
             }
 
             var interval = setInterval(function () {
