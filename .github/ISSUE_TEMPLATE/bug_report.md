@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-Which HeadlessPreviewUmbraco version are you using? (Please write the *exact* version, example: 2.0.0)
+**Which HeadlessPreviewUmbraco version are you using? (Please write the *exact* version, example: 2.0.0)**
 x.x.x
 
-Which Umbraco version are you using? (Please write the *exact* version, example: 10.1.0)
+**Which Umbraco version are you using? (Please write the *exact* version, example: 10.1.0)**
 x.x.x
 
 **Describe the bug**
