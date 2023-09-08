@@ -52,6 +52,13 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
             using (var contextReference = _umbracoContextFactory.EnsureUmbracoContext())
             {
                 var publishedContent = contextReference.UmbracoContext.Content?.GetById(true, nodeId);
+
+                if(publishedContent == null)
+                {
+                    _logger.LogError($"No content found with id '{nodeId}'");
+                    return;
+                }
+
                 nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory); 
                 
                 if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
