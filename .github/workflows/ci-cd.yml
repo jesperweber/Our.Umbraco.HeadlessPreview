@@ -51,8 +51,8 @@ jobs:
     - name: Build
       run: dotnet build $PROJECT --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
       
-      if: "!startsWith(github.ref, 'refs/heads/release')"
     - name: Run tests
+      if: "!startsWith(github.ref, 'refs/heads/release')"
       run: dotnet test --no-restore --verbosity normal
       
     - name: Publish on nuget.org
