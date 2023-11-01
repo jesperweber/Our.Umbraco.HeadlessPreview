@@ -59,7 +59,7 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
                     return;
                 }
 
-                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory); 
+                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory, culture); 
                 
                 if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
                 {
