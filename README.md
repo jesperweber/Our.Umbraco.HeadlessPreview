@@ -4,7 +4,9 @@
 
 # Our.Umbraco.HeadlessPreview
 
-This package overrides the default Umbraco preview button and lets you configure an alternative preview url.
+This package overrides the default Umbraco preview button and lets you configure an alternative preview url. This way editors can easily access preview in a headless setup.
+
+You can set different modes for the preview button, depending on your needs (headless preview, standard Umbraco preview or no preview).
 
 ## Installation
 
@@ -26,25 +28,95 @@ Install-Package Our.Umbraco.HeadlessPreview -Version <version>
 
 ## Configuration
 
-The package can be configured using the `appsetings.json` file or using the UI which will save the configuration in the database.
+The package can be configured by code, using the `appsetings.json` file or using the UI which will save the configuration in the database.
 
 
 | Setting               | Default value     | Description |
 |----------             |-------------      |------ |
-| `TemplateUrl`         | ``                | The URL used for preview. It can contain dynamic placeholder values to support different types of URL's.<br /><br />Typically used template URL are:<br/><br/><ul><li>https://mysite.com/api/preview?slug=\{slug\}&secret=mySecret</li><li>\{hostname\}/api/preview?slug=\{slug\}&secret=mySecret</li><li>https://mysite.com/\{slug\}?preview=true</li></ul> |
+| `TemplateUrl`         | ``                | The URL used for preview. It can contain dynamic [placeholder](#placeholders) values to support different types of URL's.<br /><br />Typically used template URL are:<br/><br/><ul><li>https://mysite.com/api/preview?slug=\{slug\}&secret=mySecret</li><li>\{hostname\}/api/preview?slug=\{slug\}&secret=mySecret</li><li>https://mysite.com/\{slug\}?preview=true</li></ul> |
+| `Disable`             | false             | Disables the headless preview for all nodes and uses standard Umbraco preview. |
+| `PreviewModeSettings` | []                | Lets you configure how the preview button works based on content types or node ids.<br /><br />Possible preview modes:<br /><br /><ul><li>UseHeadlessPreview - Uses the headless preview functionality. The default setting</li><li>UseStandardPreview - Uses the default Umbraco preview functionality</li><li>DisablePreview - Removes the preview button</li></ul><br />The `previewModeSettings` is an array of preview mode config objects and the objects are evaluated in the order they are registered. For each content node, the preview mode for the first matching config object is used.<br /><br /><i>Note: This settings can't be configured in by code or in the appsettings.json file.</i> |
 
 ### UI
 
 If you just have a single environment it's easy to just configure the plugin directly from the Umbraco Backoffice in the Settings section.
 
-![Configuration](https://raw.githubusercontent.com/jesperweber/Our.Umbraco.HeadlessPreview/main/screenshots/SettingsV2.png "Headless Preview Settings")
+![Configuration](https://raw.githubusercontent.com/jesperweber/Our.Umbraco.HeadlessPreview/main/screenshots/SettingsV2-2.png "Headless Preview Settings")
 
 ### appsettings.json
 This is typically the preferred way if you have a multi environment setup as you can use environment specific settings.
 
 ``` json
 "HeadlessPreview": {
-    "TemplateUrl": "https://mysite.com/api/preview?slug={slug}&secret=mySecret"
+    "TemplateUrl": "https://mysite.com/api/preview?slug={slug}&secret=mySecret",
+    "Disable": false,
+    "PreviewModeSettings": [
+      {
+        "Type": "NodeId",
+        "NodeIds": [ 1058 ],
+        "IncludeDescendants": true,
+        "Mode": "UseStandardPreview "
+      },
+      {
+        "Type": "ContentType",
+        "ContentTypes": [ "settings" ],
+        "Mode": "DisablePreview"
+      }
+    ]
+}
+```
+
+### Code
+Configuration by code is done in the `Startup.cs` file. For simple configuration you can set the configuration values directly in the config registration:
+
+``` csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddUmbraco(_env, _config)
+        .AddBackOffice()
+        .AddWebsite()
+        .AddDeliveryApi()
+        .AddComposers()
+        .AddHeadlessPreviewConfiguration(x => x
+            .AddTemplateUrlConfigurator("https://mysite.com/api/preview?slug={slug}&secret=mySecret")
+            .AddDisableConfigurator(false)
+            .AddPreviewModeSettingsConfigurator([
+                new PreviewModeContentTypeSetting { ContentTypes = ["settings"], Mode = PreviewMode.DisablePreview }
+            ])
+        )
+        .Build();
+}
+```
+
+For more complex configuration you can build your own configurator classes by implementing `ITemplateUrlConfigurator`, `IDisableConfigurator`, or `IPreviewModeSettingsConfigurator` and register them like below:
+
+``` csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddUmbraco(_env, _config)
+        .AddBackOffice()
+        .AddWebsite()
+        .AddDeliveryApi()
+        .AddComposers()
+        .AddHeadlessPreviewConfiguration(x => x
+            .AddTemplateUrlConfigurator<MyTemplateUrlConfigurator>()
+            .AddDisableConfigurator<MyDisableConfigurator>()
+            .AddPreviewModeSettingsConfigurator<MyPreviewModeSettingsConfigurator>()
+        )
+        .Build();
+}
+```
+
+Configurator class example:
+``` csharp
+// Supports dependency injection if you need other services to build your template url
+public class MyTemplateUrlConfigurator : ITemplateUrlConfigurator
+{
+    public string Configure()
+    {
+        // custom logic to build template url
+        return "https://mysite.com/api/preview?slug={slug}&secret=mySecret";
+    }
 }
 ```
 

@@ -1,20 +1,73 @@
 ﻿#headlessPreviewDashboard .configuration-dashboard-notice {
-    width: 705px;
-    margin-left: 5px;
+	width: 705px;
+	margin-left: 0px;
+	margin-bottom: 30px;
+}
+
+#headlessPreviewDashboard .configuration-dashboard-notice p {
+	margin: 15px 0px;
 }
 
 #headlessPreviewDashboard .configuration-dashboard-property {
-	padding: 10px 5px;
+	padding: 0px 0px;
 }
 
-#headlessPreviewDashboard .configuration-dashboard-property label {
-	font-weight: 700;
+#headlessPreviewDashboard .configuration-dashboard-property .preview-mode-settings {
+	width: 728px;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: solid 1px #e6e6e6;
+	border-radius: 3px;
+	background-color: #f3f3f5;
 }
 
-#headlessPreviewDashboard .configuration-dashboard-property input {
+#headlessPreviewDashboard h5 {
+	margin-top: 0px;
 	width: 750px;
+	border-bottom: solid 1px lightgray;
+}
+
+#headlessPreviewDashboard h5:not(:first-of-type) {
+	margin-top: 40px;
+}
+
+#headlessPreviewDashboard .more-info-container {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#headlessPreviewDashboard .more-info-link {
+	display: block;
+	border: none;
+	background-color: unset;
+	padding:0;
+	margin-top:5px;
+	text-decoration: underline;
+}
+
+#headlessPreviewDashboard .info {
+	transition: transform 250ms ease-in-out, opacity 250ms ease-in-out, max-height 150ms ease-in-out;
+	transform: translateY(-5px);
+	opacity: 0;
+	max-height: 0px;
+	overflow: hidden;
+}
+
+	#headlessPreviewDashboard .info.active {
+		transform: translateY(0px);
+		opacity: 1;
+		max-height: 2000px;
+	}
+
+#headlessPreviewDashboard .configuration-dashboard-property input[type="text"] {
+	width: 750px;
+	margin-bottom: 0px;
 }
 
 #headlessPreviewDashboard .configuration-dashboard-property select {
 	width: 750px;
+}
+
+#headlessPreviewDashboard .umb-form-check__info {
+	margin-top: -3px;
 }
