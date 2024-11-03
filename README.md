@@ -55,7 +55,7 @@ This is typically the preferred way if you have a multi environment setup as you
         "Type": "NodeId",
         "NodeIds": [ 1058 ],
         "IncludeDescendants": true,
-        "Mode": "UseStandardPreview "
+        "Mode": "UseStandardPreview"
       },
       {
         "Type": "ContentType",
