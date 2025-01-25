@@ -1,5 +1,4 @@
-﻿using System;
-using Our.Umbraco.HeadlessPreview.ConfigurationBuilder;
+﻿using Our.Umbraco.HeadlessPreview.ConfigurationBuilder;
 using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Our.Umbraco.HeadlessPreview.Extensions

@@ -1,9 +1,11 @@
-﻿namespace Our.Umbraco.HeadlessPreview.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Our.Umbraco.HeadlessPreview.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PreviewMode
 {
-    public enum PreviewMode
-    {
-        UseHeadlessPreview,
-        UseStandardPreview,
-        DisablePreview
-    }
+    UseHeadlessPreview,
+    UseStandardPreview,
+    DisablePreview
 }

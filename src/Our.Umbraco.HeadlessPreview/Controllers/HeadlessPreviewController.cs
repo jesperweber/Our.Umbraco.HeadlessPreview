@@ -1,79 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Our.Umbraco.HeadlessPreview.Extensions;
+using Our.Umbraco.HeadlessPreview.Models;
 using Our.Umbraco.HeadlessPreview.Services;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
-using Our.Umbraco.HeadlessPreview.Models;
 using Umbraco.Extensions;
 
-namespace Our.Umbraco.HeadlessPreview.Controllers
-{
-    [PluginController("headlesspreview")]
-    public class HeadlessPreviewController : UmbracoAuthorizedController
-    {
-        private readonly IUmbracoContextFactory _umbracoContextFactory;
-        private readonly IDomainService _domainService;
-        private readonly IPreviewConfigurationService _previewConfigurationService;
-        private readonly ITemplateUrlParser _templateUrlParser;
-        private readonly ILogger<HeadlessPreviewController> _logger;
+namespace Our.Umbraco.HeadlessPreview.Controllers;
 
-        public HeadlessPreviewController(IUmbracoContextFactory umbracoContextFactory, IDomainService domainService, 
-            IPreviewConfigurationService previewConfigurationService, ITemplateUrlParser templateUrlParser, 
-            ILogger<HeadlessPreviewController> logger)
+[PluginController("headlesspreview")]
+public class HeadlessPreviewController(
+    IUmbracoContextFactory umbracoContextFactory,
+    IDomainService domainService,
+    IPreviewConfigurationService previewConfigurationService,
+    ITemplateUrlParser templateUrlParser,
+    ILogger<HeadlessPreviewController> logger)
+    : UmbracoAuthorizedController
+{
+    [HttpGet]
+    public async Task Index()
+    {
+        if (!previewConfigurationService.IsConfigured())
         {
-            _umbracoContextFactory = umbracoContextFactory;
-            _domainService = domainService;
-            _previewConfigurationService = previewConfigurationService;
-            _templateUrlParser = templateUrlParser;
-            _logger = logger;
+            logger.LogError("Headless Preview is not configured.");
+            return;
         }
 
-        [HttpGet]
-        public void Index()
+        Guid.TryParse(HttpContext.Request.Query["guid"], out var nodeGuid);
+        var culture = HttpContext.Request.Query["culture"].ToString();
+
+        var previewConfiguration = previewConfigurationService.GetConfiguration();
+        var placeHolders = templateUrlParser.GetPlaceHolders(previewConfiguration.TemplateUrl);
+
+        var hostname = string.Empty;
+        string nodePath;
+        using (var contextReference = umbracoContextFactory.EnsureUmbracoContext())
         {
-            if (!_previewConfigurationService.IsConfigured())
+            var publishedContent = contextReference.UmbracoContext.Content.GetById(true, nodeGuid);
+
+            if(publishedContent == null)
             {
-                _logger.LogError("Headless Preview is not configured.");
+                logger.LogError($"No content found with guid '{nodeGuid}'");
                 return;
             }
 
-            int.TryParse(HttpContext.Request.Query["id"], out var nodeId);
-            var culture = HttpContext.Request.Query["culture"].ToString();
-
-            var previewConfiguration = _previewConfigurationService.GetConfiguration();
-            var placeHolders = _templateUrlParser.GetPlaceHolders(previewConfiguration.TemplateUrl);
-
-            var hostname = string.Empty;
-            string nodePath;
-            using (var contextReference = _umbracoContextFactory.EnsureUmbracoContext())
-            {
-                var publishedContent = contextReference.UmbracoContext.Content?.GetById(true, nodeId);
-
-                if(publishedContent == null)
-                {
-                    _logger.LogError($"No content found with id '{nodeId}'");
-                    return;
-                }
-
-                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory, culture); 
+            nodePath = publishedContent.BuildPathForUnpublishedNode(umbracoContextFactory, culture); 
                 
-                if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
+            if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
+            {
+                foreach (var parentOrSelf in publishedContent.AncestorsOrSelf())
                 {
-                    foreach (var parentOrSelf in publishedContent.AncestorsOrSelf())
-                    {
-                        var domain = _domainService.GetAssignedDomains(parentOrSelf.Id, false).FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
-                        hostname = domain?.DomainName;
-                    }
+                    var domain = (await domainService.GetAssignedDomainsAsync(parentOrSelf.Key, false)).FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
+                    hostname = domain?.DomainName;
                 }
             }
-            
-            var redirectUrl = _templateUrlParser.Parse(previewConfiguration.TemplateUrl, hostname, nodePath);
-            
-            HttpContext.Response.Redirect(redirectUrl, false);
         }
+            
+        var redirectUrl = templateUrlParser.Parse(previewConfiguration.TemplateUrl, hostname, nodePath);
+            
+        HttpContext.Response.Redirect(redirectUrl, false);
     }
 }

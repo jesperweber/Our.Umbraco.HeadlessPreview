@@ -1,0 +1,14 @@
+{
+  "id": "Our.Umbraco.HeadlessPreview",
+  "name": "Our.Umbraco.HeadlessPreview",
+  "version": "0.0.0",
+  "allowPackageTelemetry": true,
+  "extensions": [
+    {
+      "name": "Our.Umbraco.HeadlessPreview.Bundle",
+      "alias": "Our.Umbraco.HeadlessPreview.Bundle",
+      "type": "bundle",
+      "js": "/App_Plugins/OurUmbracoHeadlessPreview/our-umbraco-headless-preview.js"
+    }
+  ]
+}

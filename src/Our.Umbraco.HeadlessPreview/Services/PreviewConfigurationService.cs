@@ -1,9 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Our.Umbraco.HeadlessPreview.Configurators;
 using Our.Umbraco.HeadlessPreview.Models;
-using System.Collections.Generic;
-using System.Linq;
 using Umbraco.Cms.Core.Services;
 
 namespace Our.Umbraco.HeadlessPreview.Services

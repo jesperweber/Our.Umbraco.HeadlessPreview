@@ -1,8 +1,10 @@
-﻿namespace Our.Umbraco.HeadlessPreview.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Our.Umbraco.HeadlessPreview.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum TemplateUrlPlaceHolder
 {
-    public enum TemplateUrlPlaceHolder
-    {
-        Hostname,
-        Slug
-    }
+    Hostname,
+    Slug
 }

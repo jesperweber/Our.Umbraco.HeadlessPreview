@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Our.Umbraco.HeadlessPreview.Models;
+﻿using Our.Umbraco.HeadlessPreview.Models;
 
 namespace Our.Umbraco.HeadlessPreview.Services
 {

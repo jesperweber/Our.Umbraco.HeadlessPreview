@@ -1,41 +1,87 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Asp.Versioning;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Our.Umbraco.HeadlessPreview.Controllers;
 using Our.Umbraco.HeadlessPreview.Services;
-using Umbraco.Cms.Core;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Umbraco.Cms.Api.Common.OpenApi;
+using Umbraco.Cms.Api.Management.OpenApi;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.DependencyInjection;
-using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using Umbraco.Cms.Core.Hosting;
+using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using Umbraco.Extensions;
 
-namespace Our.Umbraco.HeadlessPreview.Composers
+namespace Our.Umbraco.HeadlessPreview.Composers;
+public class PreviewComposer : IComposer
 {
-    public class PreviewComposer : IComposer
+    public void Compose(IUmbracoBuilder builder)
     {
-        public void Compose(IUmbracoBuilder builder)
-        {
-            builder.Services.Configure<UmbracoPipelineOptions>(options =>
-            {
-                options.AddFilter(new UmbracoPipelineFilter(nameof(HeadlessPreviewController))
-                {
-                    Endpoints = app => app.UseEndpoints(endpoints =>
-                    {
-                        var globalSettings = app.ApplicationServices.GetRequiredService<IOptions<GlobalSettings>>().Value;
-                        var hostingEnvironment = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
-                        var backofficeArea = Constants.Web.Mvc.BackOfficePathSegment;
+        builder.Services.AddSingleton<IOperationIdHandler, CustomOperationHandler>();
 
-                        var rootSegment = $"{globalSettings.GetUmbracoMvcArea(hostingEnvironment)}/{backofficeArea}";
-                        var areaName = "headlessPreview";
-                        endpoints.MapUmbracoRoute<HeadlessPreviewController>(rootSegment, areaName, null);
-                    })
-                });
+        builder.Services.Configure<SwaggerGenOptions>(opt =>
+        {
+            // Related documentation:
+            // https://docs.umbraco.com/umbraco-cms/tutorials/creating-a-backoffice-api
+            // https://docs.umbraco.com/umbraco-cms/tutorials/creating-a-backoffice-api/adding-a-custom-swagger-document
+            // https://docs.umbraco.com/umbraco-cms/tutorials/creating-a-backoffice-api/versioning-your-api
+            // https://docs.umbraco.com/umbraco-cms/tutorials/creating-a-backoffice-api/access-policies
+
+            // Configure the Swagger generation options
+            // Add in a new Swagger API document solely for our own package that can be browsed via Swagger UI
+            // Along with having a generated swagger JSON file that we can use to auto generate a TypeScript client
+            opt.SwaggerDoc(Constants.ApiName, new OpenApiInfo
+            {
+                Title = "Our.Umbraco.HeadlessPreview Backoffice API",
+                Version = "1.0"
             });
 
-            builder.Services.AddSingleton<ITemplateUrlParser, TemplateUrlParser>();
-            builder.Services.AddSingleton<IPreviewConfigurationService, PreviewConfigurationService>();
+            // Enable Umbraco authentication for the "Example" Swagger document
+            // PR: https://github.com/umbraco/Umbraco-CMS/pull/15699
+            opt.OperationFilter<PreviewOperationSecurityFilter>();
+        });
+
+        builder.Services.Configure<UmbracoPipelineOptions>(options =>
+        {
+            options.AddFilter(new UmbracoPipelineFilter(nameof(HeadlessPreviewController))
+            {
+                Endpoints = app => app.UseEndpoints(endpoints =>
+                {
+                    var globalSettings = app.ApplicationServices.GetRequiredService<IOptions<GlobalSettings>>().Value;
+                    var hostingEnvironment = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+
+                    var rootSegment = $"{globalSettings.GetUmbracoMvcArea(hostingEnvironment)}/backoffice";
+                    var areaName = "headlessPreview";
+                    endpoints.MapUmbracoRoute<HeadlessPreviewController>(rootSegment, areaName, null);
+                })
+            });
+        });
+
+        builder.Services.AddSingleton<ITemplateUrlParser, TemplateUrlParser>();
+        builder.Services.AddSingleton<IPreviewConfigurationService, PreviewConfigurationService>();
+    }
+
+    public class PreviewOperationSecurityFilter : BackOfficeSecurityRequirementsOperationFilterBase
+    {
+        protected override string ApiName => Constants.ApiName;
+    }
+
+    // This is used to generate nice operation IDs in our swagger json file
+    // So that the generated TypeScript client has nice method names and not too verbose
+    // https://docs.umbraco.com/umbraco-cms/tutorials/creating-a-backoffice-api/umbraco-schema-and-operation-ids#operation-ids
+    public class CustomOperationHandler(IOptions<ApiVersioningOptions> apiVersioningOptions)
+        : OperationIdHandler(apiVersioningOptions)
+    {
+        protected override bool CanHandle(ApiDescription apiDescription, ControllerActionDescriptor controllerActionDescriptor)
+        {
+            return controllerActionDescriptor.ControllerTypeInfo.Namespace?.StartsWith("Our.Umbraco.HeadlessPreview.Controllers", comparisonType: StringComparison.InvariantCultureIgnoreCase) is true;
         }
+
+        public override string Handle(ApiDescription apiDescription) => $"{apiDescription.ActionDescriptor.RouteValues["action"]}";
     }
 }

@@ -29,7 +29,7 @@ public class TemplateUrlParserTest
     [TestCase("{HOSTNAME}/api/preview", "https://test.local", null, ExpectedResult = "https://test.local/api/preview")]
     [TestCase("{hostname}/api/preview?slug={slug}", "https://test.local", "/testpage", ExpectedResult = "https://test.local/api/preview?slug=/testpage")]
     [TestCase("{HOSTNAME}/api/preview?slug={SLUG}", "https://test.local", "/testpage", ExpectedResult = "https://test.local/api/preview?slug=/testpage")]
-    public string Parse_Returns_Parsed_Url(string templateUrl, string hostname, string slug)
+    public string Parse_Returns_Parsed_Url(string templateUrl, string? hostname, string? slug)
     {
         var subject = new TemplateUrlParser();
 

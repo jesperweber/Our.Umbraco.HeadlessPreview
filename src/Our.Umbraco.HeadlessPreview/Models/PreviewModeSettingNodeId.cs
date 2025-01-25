@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Our.Umbraco.HeadlessPreview.Models
+﻿namespace Our.Umbraco.HeadlessPreview.Models
 {
     public class PreviewModeSettingNodeId : IPreviewModeSetting
     {

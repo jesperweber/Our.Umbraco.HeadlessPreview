@@ -1,56 +1,67 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<ContentTargetFolders>.</ContentTargetFolders>
-		<Product>Our.Umbraco.HeadlessPreview</Product>
-		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
-		<Title>Our.Umbraco.HeadlessPreview</Title>
-		<Description>This package overrides the default Umbraco preview button and lets you configure an alternative preview url.</Description>
-		<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</RepositoryUrl>
-	</PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+	<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="9.0.0" />
-	</ItemGroup>
+  <PropertyGroup>
+	<Product>Our.Umbraco.HeadlessPreview</Product>
+	<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
+	<Title>Our.Umbraco.HeadlessPreview</Title>
+	<Description>This package overrides the default Umbraco preview button and lets you configure an alternative preview url.</Description>
+	<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageProjectUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</RepositoryUrl>
+  </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="10.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="11.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="11.0.0" />
-	</ItemGroup>
+  <!--<ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="*" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="*" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" Version="*" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="*" />
+  </ItemGroup>-->
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="13.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Web.Website" Version="14.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Web.Common" Version="14.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Api.Common" Version="14.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Api.Management" Version="14.0.0" />
 	</ItemGroup>
 
-    <ItemGroup>
-		<Content Include="App_Plugins\Our.Umbraco.HeadlessPreview\**\*.*">
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-        <None Include="build\**\*.*">
-	        <Pack>True</Pack>
-	        <PackagePath>buildTransitive</PackagePath>
-		</None>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+	    <PackageReference Include="Umbraco.Cms.Web.Website" Version="15.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Web.Common" Version="15.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Api.Common" Version="15.0.0" />
+	    <PackageReference Include="Umbraco.Cms.Api.Management" Version="15.0.0" />
 	</ItemGroup>
+  
+  <ItemGroup>
+    <!-- Dont include the client folder as part of packaging nuget build -->
+    <Content Remove="Client\**" />
+
+    <!-- However make the Umbraco-package.json included for dotnet pack or nuget package and visible to the solution -->
+    <None Include="Client\public\umbraco-package.json" Pack="false" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="wwwroot\App_Plugins\" />
+  </ItemGroup>
 
     <ItemGroup>
-      <Content Include="appsettings-schema.headlessPreview.json">
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
+		<None Include="appsettings-schema.headlessPreview.json">
+		    <Pack>True</Pack>
+		    <PackagePath>\</PackagePath>
+	    </None>
       <None Include="..\..\LICENSE">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
@@ -60,4 +71,11 @@
         <PackagePath>\</PackagePath>
       </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="build\Our.Umbraco.HeadlessPreview.targets">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+  
 </Project>
