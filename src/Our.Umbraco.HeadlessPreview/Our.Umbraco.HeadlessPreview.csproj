@@ -59,23 +59,21 @@
 
     <ItemGroup>
 		<None Include="appsettings-schema.headlessPreview.json">
-		    <Pack>True</Pack>
-		    <PackagePath>\</PackagePath>
-	    </None>
-      <None Include="..\..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-      <None Include="..\..\README.md">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="build\Our.Umbraco.HeadlessPreview.targets">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="build\**">
+			<Pack>true</Pack>
+			<PackagePath>buildTransitive</PackagePath>
+		</None>
     </ItemGroup>
   
 </Project>
