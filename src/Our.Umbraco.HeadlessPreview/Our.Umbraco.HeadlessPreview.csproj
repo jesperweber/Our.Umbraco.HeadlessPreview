@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>Our.Umbraco.HeadlessPreview</Product>
 		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
@@ -29,6 +29,11 @@
 		<PackageReference Include="Umbraco.Cms.Web.Common" Version="11.0.0" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
+		<PackageReference Include="Umbraco.Cms.Web.Common" Version="13.0.0" />
+	</ItemGroup>
+
     <ItemGroup>
 		<Content Include="App_Plugins\Our.Umbraco.HeadlessPreview\**\*.*">
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -39,6 +44,11 @@
 	        <PackagePath>buildTransitive</PackagePath>
 		</None>
 	</ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings-schema.headlessPreview.json">
+      </Content>
+    </ItemGroup>
 
     <ItemGroup>
       <None Include="..\..\LICENSE">

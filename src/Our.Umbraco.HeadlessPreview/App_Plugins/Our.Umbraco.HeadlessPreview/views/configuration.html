@@ -8,40 +8,94 @@
 
                 <div class="configuration-dashboard-content" ng-if="!vm.loadingConfiguration">
 
-                    <div ng-if="vm.configuration.configuredFromSettingsFile" class="alert-info umb-app-header umb-notifications__notification configuration-dashboard-notice">
-                        <strong>The settings are loaded from the appsettings.json file.</strong>&nbsp;<span>Go to the file to change the values</span>
+                    <div ng-if="vm.configuration.configuredFromSettingsFileOrCode" class="alert-info umb-app-header umb-notifications__notification configuration-dashboard-notice">
+                        <p><strong>The settings are loaded from the appsettings.json file or from code.</strong>&nbsp;<span>Because of that the settings can't be configured from the UI.</span></p>
                     </div>
 
+                    <h5>Template URL</h5>
                     <div class="configuration-dashboard-property">
-                        <strong>Placeholders</strong>
-                        <ul>
-                            <li><span>{hostname}</span> - The hostname added on nearest ancestor node or self with the right culture in Umbraco. If multiple hostname has same culture it takes the first.</li>
-                            <li><span>{slug}</span> - The relative path of the page being previewed.</li>
-                        </ul>
-                    </div>
+                        <span>
+                            The template URL defines what URL is opened what you click the content preview button.<br />
+                            The URL can be a dynamic URL by using placeholders.
+                        </span>
+                        
+                        <div class="more-info-container">
+                            <div class="info" ng-class="{ active: vm.toggledInfos['templateUrl'] }">
+                                Placeholders
+                                <ul>
+                                    <li><span>{hostname}</span> - The hostname added on nearest ancestor node or self with the right culture in Umbraco. If multiple hostname has same culture it takes the first.</li>
+                                    <li><span>{slug}</span> - The relative path of the page being previewed.</li>
+                                </ul>
+                                Template Url Examples
+                                <ul>
+                                    <li>https://mysite.com/api/preview?slug={slug}&secret=mySecret</li>
+                                    <li>{hostname}/api/preview?slug={slug}&secret=mySecret</li>
+                                    <li>https://mysite.com/{slug}?preview=true</li>
+                                </ul>
+                            </div>
 
-                    <div class="configuration-dashboard-property">
-                        <strong>Template Url Examples</strong>
-                        <ul>
-                            <li>https://mysite.com/api/preview?slug={slug}&secret=mySecret</li>
-                            <li>{hostname}/api/preview?slug={slug}&secret=mySecret</li>
-                            <li>https://mysite.com/{slug}?preview=true</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="configuration-dashboard-property">
-                        <label for="template-url">Template URL</label><br />
-                        <input type="text" id="template-url" class="input-field" placeholder="Example: https://mysite.com/api/preview?slug={slug}&secret=mySecret" ng-model="vm.configuration.templateUrl" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile" />
-                    </div>
+                            <button class="more-info-link" ng-click="vm.toggleInfo('templateUrl')">{{vm.toggledInfos['templateUrl'] ? "Less info" : "More info"}}</button>
+                        </div>
+                        <div>
+                            <label for="template-url">Template URL</label><br />
+                            <input type="text" id="template-url" class="input-field" placeholder="Example: https://mysite.com/api/preview?slug={slug}&secret=mySecret" ng-model="vm.configuration.templateUrl" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFileOrCode" />
+                        </div>
+                     </div>
 
-                    <umb-button ng-if="!vm.configuration.configuredFromSettingsFile" action="vm.saveConfiguration()"
-                                type="button"
-                                button-style="success"
-                                state="vm.configState"
-                                label="Save configuration"
-                                disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFile || (!vm.configuration.templateUrl)">
-                    </umb-button>
-                </div>
+                    <h5>Preview Mode Settings</h5>
+                    <div class="configuration-dashboard-property">
+                        <span>
+                            Preview mode defines how the preview is working based on the content type and/or node id.<br />
+                            The preview mode is evaluated in the order they are registered and returns the mode for the first matching setting.
+                        </span>
+
+                        <div class="more-info-container">
+                            <div class="info" ng-class="{ active: vm.toggledInfos['previewMode'] }">
+                                Potential modes
+                                <ul>
+                                    <li>UseHeadlessPreview - Uses the headless preview functionality. The default setting</li>
+                                    <li>UseStandardPreview - Uses the default Umbraco preview functionality</li>
+                                    <li>DisablePreview - Removes the preview button</li>
+                                </ul>
+                            </div>
+
+                            <button class="more-info-link" ng-click="vm.toggleInfo('previewMode')">{{vm.toggledInfos['previewMode'] ? "Less info" : "More info"}}</button>
+                        </div>
+
+                            <div ng-if="vm.configuration.previewModeSettings.length === 0" class="preview-mode-settings">
+                                <i>No custom preview mode configured - this can be configured in appsettings.json or by code. See <a href="https://github.com/jesperweber/Our.Umbraco.HeadlessPreview?tab=readme-ov-file#appsettingsjson" target="_blank">documentation</a></i>
+                            </div>
+
+                            <div data-ng-repeat="previewModeSetting in vm.configuration.previewModeSettings" ng-value="{{$index}}" class="preview-mode-settings">
+                                <span><strong>Order:</strong> {{$index+1}}<br /></span>
+                                <span><strong>Type:</strong> {{previewModeSetting.type}}<br /></span>
+                                <span><strong>Mode:</strong> {{previewModeSetting.mode}}<br /></span>
+                                <span ng-if="previewModeSetting.type == 'ContentType'"><strong>Content Types:</strong> {{previewModeSetting.contentTypes.join(", ")}}<br /></span>
+                                <span ng-if="previewModeSetting.type == 'NodeId'"><strong>Node Ids:</strong> {{previewModeSetting.nodeIds.join(", ")}}<br /></span>
+                                <span ng-if="previewModeSetting.type == 'NodeId'"><strong>Include Descendants:</strong> {{previewModeSetting.includeDescendants}}</span>
+                            </div>
+                        </div>
+
+                        <h5>Disable</h5>
+                        <div class="configuration-dashboard-property">
+                            <span>
+                                Disables the headless preview and uses standard Umbraco preview.
+                            </span><br />
+                            <umb-checkbox id="disabled2" model="vm.configuration.disabled" disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFileOrCode">
+                                <span class="umb-form-check ">
+                                    Check to disable headless preview
+                                </span>
+                            </umb-checkbox>
+                            <!--<input type="checkbox" id="disabled" ng-model="vm.configuration.disabled" ng-disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFileOrCode" />-->
+                        </div><br />
+
+                        <umb-button ng-if="!vm.configuration.configuredFromSettingsFileOrCode" action="vm.saveConfiguration()"
+                                    button-style="success"
+                                    state="vm.configState"
+                                    label="Save configuration"
+                                    disabled="vm.buttonState === 'busy' || vm.configuration.configuredFromSettingsFileOrCode">
+                        </umb-button>
+                    </div>
             </div>
 		</umb-box-content>
 	</umb-box>

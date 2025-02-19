@@ -9,7 +9,7 @@ namespace Our.Umbraco.HeadlessPreview.Extensions
         /// <summary>
         /// Unpublished pages don't have a url, so we build it our self
         /// </summary>
-        public static string BuildPathForUnpublishedNode(this IPublishedContent publishedContent, IUmbracoContextFactory umbracoContextFactory)
+        public static string BuildPathForUnpublishedNode(this IPublishedContent publishedContent, IUmbracoContextFactory umbracoContextFactory, string culture)
         {
             using var contextReference = umbracoContextFactory.EnsureUmbracoContext();
 
@@ -18,7 +18,7 @@ namespace Our.Umbraco.HeadlessPreview.Extensions
                 throw new Exception("contentCache is null");
 
             // The structure of route is: rootNodeId/urlSegment1/urlSegment2/...
-            var route = contentCache.GetRouteById(true, publishedContent.Id);
+            var route = contentCache.GetRouteById(true, publishedContent.Id, culture);
             if (route is null)
                 throw new Exception("route is null");
 

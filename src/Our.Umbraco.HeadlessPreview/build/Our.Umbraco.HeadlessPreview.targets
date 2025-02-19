@@ -24,4 +24,8 @@
         <RemoveDir Directories="@(OurUmbracoHeadlessPreviewDir)"  />
     </Target>
 
+	<ItemGroup>
+		<UmbracoJsonSchemaFiles Include="$(MSBuildThisFileDirectory)..\appsettings-schema.headlessPreview.json" />
+	</ItemGroup>
+
 </Project>

@@ -52,14 +52,27 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
             using (var contextReference = _umbracoContextFactory.EnsureUmbracoContext())
             {
                 var publishedContent = contextReference.UmbracoContext.Content?.GetById(true, nodeId);
-                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory); 
+
+                if(publishedContent == null)
+                {
+                    _logger.LogError($"No content found with id '{nodeId}'");
+                    return;
+                }
+
+                nodePath = publishedContent?.BuildPathForUnpublishedNode(_umbracoContextFactory, culture); 
                 
                 if (placeHolders.Contains(TemplateUrlPlaceHolder.Hostname))
                 {
+                    // Get the first matching domain for the content item or its ancestors
                     foreach (var parentOrSelf in publishedContent.AncestorsOrSelf())
                     {
-                        var domain = _domainService.GetAssignedDomains(parentOrSelf.Id, false).FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
-                        hostname = domain?.DomainName;
+                        var domain = _domainService.GetAssignedDomains(parentOrSelf.Id, false)
+                            .FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
+
+                        if (domain == null) continue;
+    
+                        hostname = domain.DomainName;
+                        break; // Exit the loop as soon as a hostname is found
                     }
                 }
             }

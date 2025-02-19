@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{994027DB-19D8-4E81-99C7-51C8F06CD561}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		CHANGELOG.md = CHANGELOG.md
 		.github\workflows\ci-cd.yml = .github\workflows\ci-cd.yml
 		GetBuildVersion.psm1 = GetBuildVersion.psm1
 		LICENSE = LICENSE
@@ -17,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		umbraco-marketplace.json = umbraco-marketplace.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.HeadlessPreview.Tests", "src\Our.Umbraco.HeadlessPreview.Tests\Our.Umbraco.HeadlessPreview.Tests.csproj", "{A5161DF7-36B2-4550-A100-51C7BA2F77CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Our.Umbraco.HeadlessPreview.Tests", "src\Our.Umbraco.HeadlessPreview.Tests\Our.Umbraco.HeadlessPreview.Tests.csproj", "{A5161DF7-36B2-4550-A100-51C7BA2F77CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

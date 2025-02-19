@@ -2,6 +2,7 @@
     var vm = this;
     vm.loadingConfiguration = false;
     vm.buttonState = null;
+    vm.toggledInfos = [];
     vm.configuration = {};
 
     function init() {
@@ -15,7 +16,9 @@
             .then(function (result) {
                 if (result.data.isSuccess) {
                     vm.configuration.templateUrl = result.data.data.templateUrl;
-                    vm.configuration.configuredFromSettingsFile = result.data.data.configuredFromSettingsFile;
+                    vm.configuration.disabled = result.data.data.disabled;
+                    vm.configuration.previewModeSettings = result.data.data.previewModeSettings;
+                    vm.configuration.configuredFromSettingsFileOrCode = result.data.data.configuredFromSettingsFileOrCode;
                     vm.loadingConfiguration = false;
                     vm.buttonState = null;
                 }
@@ -40,6 +43,18 @@
                 notifyErrors(error.data, `Error saving configuration: ${error.data.message}`);
                 vm.buttonState = null;
             });
+    };
+
+    vm.toggleInfo = function (infoGroup) {
+        var infoGroupState = vm.toggledInfos[infoGroup];
+
+        if (!infoGroupState) {
+            vm.toggledInfos[infoGroup] = true;
+        }
+        else {
+            vm.toggledInfos[infoGroup] = !vm.toggledInfos[infoGroup];
+        }
+        console.log(vm.toggledInfos[infoGroup])
     };
 
     function notifyErrors(data, errorMessage) {
