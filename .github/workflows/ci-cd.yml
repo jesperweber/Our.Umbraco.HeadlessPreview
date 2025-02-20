@@ -20,7 +20,7 @@ jobs:
       SOLUTION: 'Our.Umbraco.HeadlessPreview.sln'
       PROJECT: 'src/Our.Umbraco.HeadlessPreview/*.csproj'
       
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
       shell: pwsh
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v2
+      uses: NuGet/setup-nuget@v1.1.1
 
     - name: Restore dependencies
       run: nuget restore $SOLUTION
