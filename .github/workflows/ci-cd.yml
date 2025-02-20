@@ -50,7 +50,7 @@ jobs:
             8.0
 
     - name: Build
-      run: dotnet build $PROJECT --configuration Release --no-restore
+      run: dotnet build $PROJECT --configuration Release -p:Version=2.2.2 --no-restore
       
     - name: Run tests
       if: "!startsWith(github.ref, 'refs/heads/release')"
