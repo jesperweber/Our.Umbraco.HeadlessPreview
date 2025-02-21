@@ -70,7 +70,7 @@ namespace Our.Umbraco.HeadlessPreview.Controllers
                             .FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
 
                         if (domain == null) continue;
-
+    
                         hostname = domain.DomainName;
                         break; // Exit the loop as soon as a hostname is found
                     }
