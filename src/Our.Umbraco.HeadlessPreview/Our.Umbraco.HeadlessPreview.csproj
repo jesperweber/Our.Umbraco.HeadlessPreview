@@ -1,11 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- [CHANGE: Umbraco 17 upgrade - single net10 target] Related: PreviewApiController.cs, PreviewComposer.cs, HeadlessPreviewUrlProvider.cs -->
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>Our.Umbraco.HeadlessPreview</Product>
 		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
+		<!-- [CHANGE: Umbraco 17 upgrade - prerelease version] Related: documentation/UPGRADE-TO-UMBRACO-17.md -->
+		<Version>17.0.0-alpha000</Version>
 		<Title>Our.Umbraco.HeadlessPreview</Title>
-		<Description>This package overrides the default Umbraco preview button and lets you configure an alternative preview url.</Description>
+		<Description>This package adds a headless/alternative preview option to the Umbraco backoffice and lets you configure the preview url.</Description>
 		<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -14,50 +19,41 @@
 		<RepositoryUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</RepositoryUrl>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="9.0.0" />
+	<ItemGroup>
+		<PackageReference Include="Umbraco.Cms.Web.Common" Version="[17.0.0,17.9.9)" />
+		<PackageReference Include="Umbraco.Cms.Api.Management" Version="[17.0.0,17.9.9)" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="10.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="11.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="11.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="13.0.0" />
-	</ItemGroup>
-
-    <ItemGroup>
+	<ItemGroup>
 		<Content Include="App_Plugins\Our.Umbraco.HeadlessPreview\**\*.*">
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
-        <None Include="build\**\*.*">
-	        <Pack>True</Pack>
-	        <PackagePath>buildTransitive</PackagePath>
+		<None Include="build\**\*.*">
+			<Pack>True</Pack>
+			<PackagePath>buildTransitive</PackagePath>
 		</None>
 	</ItemGroup>
 
-    <ItemGroup>
-      <Content Include="appsettings-schema.headlessPreview.json">
-      </Content>
-    </ItemGroup>
+	<ItemGroup>
+		<Content Include="appsettings-schema.headlessPreview.json" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <None Include="..\..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-      <None Include="..\..\README.md">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-    </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<!-- Exclude the TypeScript client sources from the C# compilation/pack -->
+	<ItemGroup>
+		<Content Remove="Client\**" />
+		<None Remove="Client\**" />
+		<Compile Remove="Client\**" />
+	</ItemGroup>
 </Project>

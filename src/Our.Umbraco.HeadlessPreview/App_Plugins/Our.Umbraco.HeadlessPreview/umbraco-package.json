@@ -1,0 +1,50 @@
+{
+  "$schema": "../../umbraco-package-schema.json",
+  "name": "Our.Umbraco.HeadlessPreview",
+  "version": "2.0.0",
+  "allowPackageTelemetry": true,
+  "extensions": [
+    {
+      "type": "backofficeEntryPoint",
+      "alias": "Our.Umbraco.HeadlessPreview.EntryPoint",
+      "name": "Headless Preview Entry Point",
+      "js": "/App_Plugins/Our.Umbraco.HeadlessPreview/entrypoint.js"
+    },
+    {
+      "type": "dashboard",
+      "alias": "Our.Umbraco.HeadlessPreview.Dashboard",
+      "name": "Headless Preview Settings Dashboard",
+      "element": "/App_Plugins/Our.Umbraco.HeadlessPreview/dashboard.js",
+      "elementName": "headless-preview-dashboard",
+      "weight": 30,
+      "meta": {
+        "label": "Headless Preview",
+        "pathname": "headless-preview"
+      },
+      "conditions": [
+        {
+          "alias": "Umb.Condition.SectionAlias",
+          "match": "Umb.Section.Settings"
+        }
+      ]
+    },
+    {
+      "type": "workspaceActionMenuItem",
+      "kind": "previewOption",
+      "alias": "Our.Umbraco.HeadlessPreview.PreviewOption",
+      "name": "Headless Preview Option",
+      "forWorkspaceActions": "Umb.WorkspaceAction.Document.SaveAndPreview",
+      "weight": 110,
+      "meta": {
+        "icon": "icon-globe",
+        "label": "Headless preview",
+        "urlProviderAlias": "headlessPreview"
+      },
+      "conditions": [
+        {
+          "alias": "Our.Umbraco.HeadlessPreview.Condition.Applies"
+        }
+      ]
+    }
+  ]
+}
