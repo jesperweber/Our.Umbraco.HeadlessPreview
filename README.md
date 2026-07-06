@@ -26,6 +26,13 @@ Using the Package Manager
 Install-Package Our.Umbraco.HeadlessPreview -Version <version>
 ```
 
+## Supported verions
+
+HeadlessPreview|Umbraco|
+|---|---|
+|V2|9-13|
+|V3|17-|
+
 ## Configuration
 
 The package can be configured by code, using the `appsetings.json` file or using the UI which will save the configuration in the database.
