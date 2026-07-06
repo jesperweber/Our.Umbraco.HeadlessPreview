@@ -13,20 +13,34 @@ import { UMB_DOCUMENT_WORKSPACE_CONTEXT } from "@umbraco-cms/backoffice/document
 export const HEADLESS_PREVIEW_APPLIES_CONDITION_ALIAS =
   "Our.Umbraco.HeadlessPreview.Condition.Applies";
 
-export class HeadlessPreviewAppliesCondition
+// Removes the entire preview button (our headless option AND the core Umbraco "Save and preview"
+// button) for documents whose resolved preview mode is DisablePreview. Attached to the core
+// Umb.WorkspaceAction.Document.SaveAndPreview action in entrypoint.ts via appendCondition.
+export const HEADLESS_PREVIEW_NOT_DISABLED_CONDITION_ALIAS =
+  "Our.Umbraco.HeadlessPreview.Condition.NotDisabled";
+
+type PreviewModeResult = { applies: boolean; mode: string };
+
+// Shared plumbing for the preview-mode conditions: tracks the open document's unique, fetches the
+// preview-mode endpoint, and re-evaluates whenever the document changes. Subclasses translate the
+// result into a permitted flag via #permit().
+abstract class PreviewModeConditionBase
   extends UmbConditionBase<UmbConditionConfigBase>
   implements UmbExtensionCondition
 {
   #unique?: string;
+  // Permitted value used before/without a resolved result (fail-open vs fail-closed).
+  #defaultPermitted: boolean;
 
   constructor(
     host: UmbControllerHost,
     args: { config: UmbConditionConfigBase; onChange: (permitted: boolean) => void },
+    defaultPermitted: boolean,
   ) {
     super(host, args);
 
-    // Fail closed until we know the option applies, so a broken option never flashes up.
-    this.permitted = false;
+    this.#defaultPermitted = defaultPermitted;
+    this.permitted = defaultPermitted;
 
     this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (workspaceContext) => {
       if (!workspaceContext) return;
@@ -37,19 +51,24 @@ export class HeadlessPreviewAppliesCondition
     });
   }
 
+  // Maps a successfully resolved preview mode to the permitted flag.
+  protected abstract permit(result: PreviewModeResult): boolean;
+
   async #evaluate(): Promise<void> {
     const key = this.#unique;
     if (!key) {
-      this.permitted = false;
+      this.permitted = this.#defaultPermitted;
       return;
     }
 
+    const result = await this.#resolvePreviewMode(key);
+    this.permitted = result ? this.permit(result) : this.#defaultPermitted;
+  }
+
+  async #resolvePreviewMode(key: string): Promise<PreviewModeResult | null> {
     try {
       const authContext = await this.getContext(UMB_AUTH_CONTEXT);
-      if (!authContext) {
-        this.permitted = false;
-        return;
-      }
+      if (!authContext) return null;
 
       const config = authContext.getOpenApiConfiguration();
       const token =
@@ -63,16 +82,41 @@ export class HeadlessPreviewAppliesCondition
         },
       );
 
-      if (!response.ok) {
-        this.permitted = false;
-        return;
-      }
+      if (!response.ok) return null;
 
-      const result = (await response.json()) as { applies: boolean };
-      this.permitted = result.applies === true;
+      return (await response.json()) as PreviewModeResult;
     } catch {
-      this.permitted = false;
+      return null;
     }
+  }
+}
+
+export class HeadlessPreviewAppliesCondition extends PreviewModeConditionBase {
+  constructor(
+    host: UmbControllerHost,
+    args: { config: UmbConditionConfigBase; onChange: (permitted: boolean) => void },
+  ) {
+    // Fail closed until we know the option applies, so a broken option never flashes up.
+    super(host, args, false);
+  }
+
+  protected permit(result: PreviewModeResult): boolean {
+    return result.applies === true;
+  }
+}
+
+export class HeadlessPreviewNotDisabledCondition extends PreviewModeConditionBase {
+  constructor(
+    host: UmbControllerHost,
+    args: { config: UmbConditionConfigBase; onChange: (permitted: boolean) => void },
+  ) {
+    // Fail open: this gates the core "Save and preview" button, so a network glitch or an unknown
+    // document must never strip it. We only remove it when the server explicitly says DisablePreview.
+    super(host, args, true);
+  }
+
+  protected permit(result: PreviewModeResult): boolean {
+    return result.mode !== "DisablePreview";
   }
 }
 
