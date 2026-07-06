@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<!-- [CHANGE: Umbraco 17 upgrade - single net10 target] Related: PreviewApiController.cs, PreviewComposer.cs, HeadlessPreviewUrlProvider.cs -->
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>Our.Umbraco.HeadlessPreview</Product>
 		<PackageId>Our.Umbraco.HeadlessPreview</PackageId>
-		<!-- [CHANGE: Umbraco 17 upgrade - prerelease version] Related: documentation/UPGRADE-TO-UMBRACO-17.md -->
-		<Version>17.0.0-alpha000</Version>
 		<Title>Our.Umbraco.HeadlessPreview</Title>
 		<Description>This package adds a headless/alternative preview option to the Umbraco backoffice and lets you configure the preview url.</Description>
 		<PackageTags>umbraco-marketplace; umbraco; preview; headless</PackageTags>
@@ -19,9 +16,9 @@
 		<RepositoryUrl>https://github.com/jesperweber/Our.Umbraco.HeadlessPreview</RepositoryUrl>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="[17.0.0,17.9.9)" />
-		<PackageReference Include="Umbraco.Cms.Api.Management" Version="[17.0.0,17.9.9)" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<PackageReference Include="Umbraco.Cms.Web.Common" Version="17.0.0" />
+		<PackageReference Include="Umbraco.Cms.Api.Management" Version="17.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
