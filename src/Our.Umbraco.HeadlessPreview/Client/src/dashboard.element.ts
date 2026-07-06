@@ -151,10 +151,11 @@ export default class HeadlessPreviewDashboardElement extends UmbElementMixin(Lit
           preview option. It can be dynamic by using placeholders.
         </p>
         <uui-button
-          look="secondary"
+          look="default"
           compact
           label=${this._showTemplateInfo ? "Less info" : "More info"}
           @click=${() => (this._showTemplateInfo = !this._showTemplateInfo)}
+          style="text-decoration: underline;"
         ></uui-button>
         ${this._showTemplateInfo
           ? html`<div class="info">
@@ -171,6 +172,7 @@ export default class HeadlessPreviewDashboardElement extends UmbElementMixin(Lit
               </ul>
             </div>`
           : nothing}
+          <br />
         <uui-input
           id="template-url"
           label="Template URL"
@@ -182,14 +184,15 @@ export default class HeadlessPreviewDashboardElement extends UmbElementMixin(Lit
 
         <h4>Preview Mode Settings</h4>
         <p>
-          Preview modes are evaluated in order; the first matching setting wins.
-          Configure them in appsettings.json or by code.
+          Preview mode defines how the preview is working based on the content type and/or node guid.<br />
+          The preview mode is evaluated in the order they are registered and returns the first matching setting.
         </p>
         <uui-button
-          look="secondary"
+          look="default"
           compact
           label=${this._showModeInfo ? "Less info" : "More info"}
           @click=${() => (this._showModeInfo = !this._showModeInfo)}
+          style="text-decoration: underline;"
         ></uui-button>
         ${this._showModeInfo
           ? html`<div class="info">
@@ -230,7 +233,7 @@ export default class HeadlessPreviewDashboardElement extends UmbElementMixin(Lit
   #renderModes() {
     const modes = this._config?.previewModeSettings ?? [];
     if (modes.length === 0) {
-      return html`<p class="muted"><em>No custom preview mode configured.</em></p>`;
+      return html`<p class="muted"><em>No custom preview mode configured - this can be configured in appsettings.json or by code.</em></p>`;
     }
     return html`<uui-table>
       <uui-table-head>

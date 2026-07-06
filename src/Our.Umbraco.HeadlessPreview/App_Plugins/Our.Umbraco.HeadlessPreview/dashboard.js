@@ -4,13 +4,13 @@ var g = (s) => {
 var T = (s, n, e) => n.has(s) || g("Cannot " + e);
 var f = (s, n, e) => n.has(s) ? g("Cannot add the same private member more than once") : n instanceof WeakSet ? n.add(s) : n.set(s, e);
 var a = (s, n, e) => (T(s, n, "access private method"), e);
-import { LitElement as C, html as r, nothing as u, css as I } from "@umbraco-cms/backoffice/external/lit";
-import { UmbElementMixin as U } from "@umbraco-cms/backoffice/element-api";
-import { UMB_AUTH_CONTEXT as x } from "@umbraco-cms/backoffice/auth";
-import { UMB_NOTIFICATION_CONTEXT as m } from "@umbraco-cms/backoffice/notification";
-const b = "/umbraco/management/api/v1/headless-preview";
+import { LitElement as I, html as r, nothing as u, css as x } from "@umbraco-cms/backoffice/external/lit";
+import { UmbElementMixin as C } from "@umbraco-cms/backoffice/element-api";
+import { UMB_AUTH_CONTEXT as U } from "@umbraco-cms/backoffice/auth";
+import { UMB_NOTIFICATION_CONTEXT as b } from "@umbraco-cms/backoffice/notification";
+const m = "/umbraco/management/api/v1/headless-preview";
 var i, h, v, w, p, _, y, $;
-const c = class c extends U(C) {
+const c = class c extends C(I) {
   constructor() {
     super(...arguments);
     f(this, i);
@@ -36,10 +36,11 @@ const c = class c extends U(C) {
           preview option. It can be dynamic by using placeholders.
         </p>
         <uui-button
-          look="secondary"
+          look="default"
           compact
           label=${this._showTemplateInfo ? "Less info" : "More info"}
           @click=${() => this._showTemplateInfo = !this._showTemplateInfo}
+          style="text-decoration: underline;"
         ></uui-button>
         ${this._showTemplateInfo ? r`<div class="info">
               <strong>Placeholders</strong>
@@ -54,6 +55,7 @@ const c = class c extends U(C) {
                 <li>https://mysite.com/{slug}?preview=true</li>
               </ul>
             </div>` : u}
+          <br />
         <uui-input
           id="template-url"
           label="Template URL"
@@ -65,14 +67,15 @@ const c = class c extends U(C) {
 
         <h4>Preview Mode Settings</h4>
         <p>
-          Preview modes are evaluated in order; the first matching setting wins.
-          Configure them in appsettings.json or by code.
+          Preview mode defines how the preview is working based on the content type and/or node guid.<br />
+          The preview mode is evaluated in the order they are registered and returns the first matching setting.
         </p>
         <uui-button
-          look="secondary"
+          look="default"
           compact
           label=${this._showModeInfo ? "Less info" : "More info"}
           @click=${() => this._showModeInfo = !this._showModeInfo}
+          style="text-decoration: underline;"
         ></uui-button>
         ${this._showModeInfo ? r`<div class="info">
               <ul>
@@ -107,7 +110,7 @@ const c = class c extends U(C) {
   }
 };
 i = new WeakSet(), h = async function(e, t) {
-  const o = await this.getContext(x);
+  const o = await this.getContext(U);
   if (!o)
     throw new Error("Could not resolve the backoffice auth context.");
   const l = o.getOpenApiConfiguration(), k = typeof l.token == "function" ? await l.token() : l.token;
@@ -123,7 +126,7 @@ i = new WeakSet(), h = async function(e, t) {
 }, v = async function() {
   this._loading = !0;
   try {
-    const e = await a(this, i, h).call(this, `${b}/configuration`);
+    const e = await a(this, i, h).call(this, `${m}/configuration`);
     if (!e.ok)
       throw new Error(`Failed to load configuration (${e.status})`);
     this._config = await e.json();
@@ -136,7 +139,7 @@ i = new WeakSet(), h = async function(e, t) {
   if (this._config) {
     this._saving = !0;
     try {
-      const e = await a(this, i, h).call(this, `${b}/configuration`, {
+      const e = await a(this, i, h).call(this, `${m}/configuration`, {
         method: "POST",
         body: JSON.stringify(this._config)
       });
@@ -144,7 +147,7 @@ i = new WeakSet(), h = async function(e, t) {
         const o = await e.text();
         throw new Error(o || `Save failed (${e.status})`);
       }
-      const t = await this.getContext(m);
+      const t = await this.getContext(b);
       t == null || t.peek("positive", {
         data: { headline: "Headless Preview", message: "Configuration saved" }
       });
@@ -155,7 +158,7 @@ i = new WeakSet(), h = async function(e, t) {
     }
   }
 }, p = async function(e) {
-  const t = await this.getContext(m);
+  const t = await this.getContext(b);
   t == null || t.peek("danger", {
     data: { headline: "Headless Preview", message: e }
   });
@@ -172,7 +175,7 @@ i = new WeakSet(), h = async function(e, t) {
 }, $ = function() {
   var t;
   const e = ((t = this._config) == null ? void 0 : t.previewModeSettings) ?? [];
-  return e.length === 0 ? r`<p class="muted"><em>No custom preview mode configured.</em></p>` : r`<uui-table>
+  return e.length === 0 ? r`<p class="muted"><em>No custom preview mode configured - this can be configured in appsettings.json or by code.</em></p>` : r`<uui-table>
       <uui-table-head>
         <uui-table-head-cell>#</uui-table-head-cell>
         <uui-table-head-cell>Type</uui-table-head-cell>
@@ -196,7 +199,7 @@ i = new WeakSet(), h = async function(e, t) {
   _showTemplateInfo: { state: !0 },
   _showModeInfo: { state: !0 },
   _config: { state: !0 }
-}, c.styles = I`
+}, c.styles = x`
     :host {
       display: block;
       padding: var(--uui-size-layout-1);
