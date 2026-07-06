@@ -1,7 +1,6 @@
 {
   "$schema": "../../umbraco-package-schema.json",
   "name": "Our.Umbraco.HeadlessPreview",
-  "version": "2.0.0",
   "allowPackageTelemetry": true,
   "extensions": [
     {

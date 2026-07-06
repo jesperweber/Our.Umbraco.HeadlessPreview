@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Test sites
 TestSites/
+
+# Umbraco backoffice build output (generated from Client/ by Vite)
+App_Plugins/

@@ -1,8 +1,27 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+import { copyFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
-// [CHANGE: Umbraco 17 upgrade - Vite build for the new Lit backoffice client]
-// Related: src/dashboard.element.ts, ../App_Plugins/Our.Umbraco.HeadlessPreview/umbraco-package.json
+const OUT_DIR = "../App_Plugins/Our.Umbraco.HeadlessPreview";
+const PACKAGE_MANIFEST = "umbraco-package.json";
+
+// Copy the hand-authored umbraco-package.json into the build output so the
+// whole package (JS bundles + manifest) ships from a single source of truth.
+function copyPackageManifest(): Plugin {
+  const src = fileURLToPath(new URL(PACKAGE_MANIFEST, import.meta.url));
+  const dest = fileURLToPath(
+    new URL(`${OUT_DIR}/${PACKAGE_MANIFEST}`, import.meta.url),
+  );
+  return {
+    name: "copy-umbraco-package-manifest",
+    writeBundle() {
+      copyFileSync(src, dest);
+    },
+  };
+}
+
 export default defineConfig({
+  plugins: [copyPackageManifest()],
   build: {
     lib: {
       entry: {
@@ -12,8 +31,8 @@ export default defineConfig({
       formats: ["es"],
     },
     // Emit straight into the package's App_Plugins folder (served by Umbraco).
-    outDir: "../App_Plugins/Our.Umbraco.HeadlessPreview",
-    // Do not wipe the folder - the hand-authored umbraco-package.json lives there.
+    outDir: OUT_DIR,
+    // Do not wipe the folder - the manifest is copied in, not generated.
     emptyOutDir: false,
     sourcemap: true,
     rollupOptions: {
