@@ -44,7 +44,7 @@ The package can be configured by code, using the `appsetings.json` file or using
 | `Disable`             | false             | Disables the headless preview for all nodes and uses standard Umbraco preview. |
 | `PreviewModeSettings` | []                | Lets you configure how the preview works based on content types or node ids.<br /><br />Possible preview modes:<br /><br /><ul><li>UseHeadlessPreview - Shows the **Headless preview** option using the configured headless URL. The default setting</li><li>UseStandardPreview - Hides the headless option so the default Umbraco preview is used</li><li>DisablePreview - Hides the headless preview option</li></ul><br />The `previewModeSettings` is an array of preview mode config objects and the objects are evaluated in the order they are registered. For each content node, the preview mode for the first matching config object is used.<br /><br /><i>Note: This setting can't be configured by code or in the appsettings.json file.</i> |
 
-> **Umbraco 17 behaviour:** Headless preview is shown as a **Headless preview** option on the *Save and preview* split button. The option is automatically hidden for nodes whose resolved mode is `UseStandardPreview` or `DisablePreview` (and when headless preview is globally disabled or unconfigured). Note that `DisablePreview` only hides the *headless* option — the built-in Umbraco preview button remains.
+> **Umbraco 17 behaviour:** Headless preview is shown as a **Headless preview** option on the *Save and preview* split button. The option is automatically hidden for nodes whose resolved mode is `UseStandardPreview` or `DisablePreview` (and when headless preview is globally disabled or unconfigured).
 
 ### UI
 
