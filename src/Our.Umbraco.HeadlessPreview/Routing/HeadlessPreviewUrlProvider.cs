@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Our.Umbraco.HeadlessPreview.Extensions;
 using Our.Umbraco.HeadlessPreview.Models;
@@ -26,7 +22,7 @@ namespace Our.Umbraco.HeadlessPreview.Routing
         private readonly IPreviewConfigurationService _previewConfigurationService;
         private readonly IPreviewModeResolver _previewModeResolver;
         private readonly ITemplateUrlParser _templateUrlParser;
-        private readonly IPublishedUrlProvider _publishedUrlProvider;
+        private readonly IDocumentUrlService _documentUrlService;
         private readonly IDomainService _domainService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -34,14 +30,14 @@ namespace Our.Umbraco.HeadlessPreview.Routing
             IPreviewConfigurationService previewConfigurationService,
             IPreviewModeResolver previewModeResolver,
             ITemplateUrlParser templateUrlParser,
-            IPublishedUrlProvider publishedUrlProvider,
+            IDocumentUrlService documentUrlService,
             IDomainService domainService,
             IHttpContextAccessor httpContextAccessor)
         {
             _previewConfigurationService = previewConfigurationService;
             _previewModeResolver = previewModeResolver;
             _templateUrlParser = templateUrlParser;
-            _publishedUrlProvider = publishedUrlProvider;
+            _documentUrlService = documentUrlService;
             _domainService = domainService;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -108,9 +104,18 @@ namespace Our.Umbraco.HeadlessPreview.Routing
 
         private string BuildSlug(IContent content, string? culture)
         {
-            // The relative path of the page being previewed (without the leading slash).
-            var relativeUrl = _publishedUrlProvider.GetUrl(content.Key, UrlMode.Relative, culture, current: null);
-            return string.IsNullOrWhiteSpace(relativeUrl) ? string.Empty : relativeUrl.TrimStart('/');
+            // The published URL can't be used: for a never-published node Umbraco resolves it to the
+            // nearest published ancestor (e.g. "/page1" for an unpublished "/page1/page4"). Build the
+            // path from the draft URL segments instead, which covers published and unpublished nodes.
+            // The route is "/child/grandchild" when no domain is assigned, or "1234/grandchild" where
+            // 1234 is the id of the node holding the domain. The hostname is resolved separately, so
+            // only the path part (without the leading slash) is used.
+            var route = _documentUrlService.GetLegacyRouteFormat(content.Key, culture, isDraft: true);
+            if (string.IsNullOrWhiteSpace(route) || route == "#")
+                return string.Empty;
+
+            var pathStart = route.IndexOf('/');
+            return pathStart < 0 ? string.Empty : route[(pathStart + 1)..];
         }
 
         private string ResolveHostname(IContent content, string? culture)
