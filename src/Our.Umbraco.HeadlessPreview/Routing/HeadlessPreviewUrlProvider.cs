@@ -24,6 +24,7 @@ namespace Our.Umbraco.HeadlessPreview.Routing
         private readonly ITemplateUrlParser _templateUrlParser;
         private readonly IDocumentUrlService _documentUrlService;
         private readonly IDomainService _domainService;
+        private readonly IIdKeyMap _idKeyMap;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HeadlessPreviewUrlProvider(
@@ -32,6 +33,7 @@ namespace Our.Umbraco.HeadlessPreview.Routing
             ITemplateUrlParser templateUrlParser,
             IDocumentUrlService documentUrlService,
             IDomainService domainService,
+            IIdKeyMap idKeyMap,
             IHttpContextAccessor httpContextAccessor)
         {
             _previewConfigurationService = previewConfigurationService;
@@ -39,6 +41,7 @@ namespace Our.Umbraco.HeadlessPreview.Routing
             _templateUrlParser = templateUrlParser;
             _documentUrlService = documentUrlService;
             _domainService = domainService;
+            _idKeyMap = idKeyMap;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -49,24 +52,24 @@ namespace Our.Umbraco.HeadlessPreview.Routing
 
         public IEnumerable<UrlInfo> GetOtherUrls(int id, Uri current) => Array.Empty<UrlInfo>();
 
-        public Task<UrlInfo?> GetPreviewUrlAsync(IContent content, string? culture, string? segment)
+        public async Task<UrlInfo?> GetPreviewUrlAsync(IContent content, string? culture, string? segment)
         {
             // Honours configuration, the global disable flag and the per-content-type / per-node modes.
             if (!_previewModeResolver.HeadlessPreviewApplies(content))
-                return Task.FromResult<UrlInfo?>(null);
+                return null;
 
             var configuration = _previewConfigurationService.GetConfiguration();
             var placeHolders = _templateUrlParser.GetPlaceHolders(configuration.TemplateUrl);
 
             var slug = BuildSlug(content, culture);
             var hostname = placeHolders.Contains(TemplateUrlPlaceHolder.Hostname)
-                ? ResolveHostname(content, culture)
+                ? await ResolveHostnameAsync(content, culture)
                 : string.Empty;
 
             var url = _templateUrlParser.Parse(configuration.TemplateUrl, hostname, slug);
 
             if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
-                return Task.FromResult<UrlInfo?>(null);
+                return null;
 
             // The preview option opens this URL from the backoffice SPA (served under "/umbraco/").
             // A relative URL (e.g. when no domain/hostname is assigned) would otherwise be resolved
@@ -76,17 +79,17 @@ namespace Our.Umbraco.HeadlessPreview.Routing
             {
                 var origin = GetSiteOrigin();
                 if (origin is null)
-                    return Task.FromResult<UrlInfo?>(null);
+                    return null;
 
                 uri = new Uri(origin, url);
             }
 
-            return Task.FromResult<UrlInfo?>(new UrlInfo(
+            return new UrlInfo(
                 url: uri,
                 provider: Alias,
                 culture: culture,
                 message: null,
-                isExternal: true));
+                isExternal: true);
         }
 
         /// <summary>
@@ -118,12 +121,18 @@ namespace Our.Umbraco.HeadlessPreview.Routing
             return pathStart < 0 ? string.Empty : route[(pathStart + 1)..];
         }
 
-        private string ResolveHostname(IContent content, string? culture)
+        private async Task<string> ResolveHostnameAsync(IContent content, string? culture)
         {
             // Walk from the node up to the root and return the first assigned domain matching the culture.
             foreach (var ancestorOrSelfId in content.AncestorOrSelfIds())
             {
-                var domain = _domainService.GetAssignedDomains(ancestorOrSelfId, false)
+                // IDomainService.GetAssignedDomains(int, bool) was removed in Umbraco 18; the key-based
+                // async overload exists in both Umbraco 17 and 18.
+                var keyAttempt = _idKeyMap.GetKeyForId(ancestorOrSelfId, UmbracoObjectTypes.Document);
+                if (!keyAttempt.Success)
+                    continue;
+
+                var domain = (await _domainService.GetAssignedDomainsAsync(keyAttempt.Result, false))
                     .FirstOrDefault(x => string.IsNullOrWhiteSpace(culture) || x.LanguageIsoCode == culture);
 
                 if (domain is null)
