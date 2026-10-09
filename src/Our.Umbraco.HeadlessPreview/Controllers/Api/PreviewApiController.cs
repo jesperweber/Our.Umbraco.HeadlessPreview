@@ -5,6 +5,7 @@ using Our.Umbraco.HeadlessPreview.Models;
 using Our.Umbraco.HeadlessPreview.Services;
 using Umbraco.Cms.Api.Management.Controllers;
 using Umbraco.Cms.Api.Management.Routing;
+using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 
 namespace Our.Umbraco.HeadlessPreview.Controllers.Api
@@ -19,15 +20,18 @@ namespace Our.Umbraco.HeadlessPreview.Controllers.Api
         private readonly IPreviewConfigurationService _previewConfigurationService;
         private readonly IPreviewModeResolver _previewModeResolver;
         private readonly IContentService _contentService;
+        private readonly IIdKeyMap _idKeyMap;
 
         public PreviewApiController(
             IPreviewConfigurationService previewConfigurationService,
             IPreviewModeResolver previewModeResolver,
-            IContentService contentService)
+            IContentService contentService,
+            IIdKeyMap idKeyMap)
         {
             _previewConfigurationService = previewConfigurationService;
             _previewModeResolver = previewModeResolver;
             _contentService = contentService;
+            _idKeyMap = idKeyMap;
         }
 
         [HttpGet("configuration")]
@@ -60,7 +64,10 @@ namespace Our.Umbraco.HeadlessPreview.Controllers.Api
         [ProducesResponseType(typeof(PreviewModeResult), StatusCodes.Status200OK)]
         public IActionResult GetPreviewMode(Guid key)
         {
-            var content = _contentService.GetById(key);
+            // IContentService.GetById(Guid) was removed in Umbraco 18, so resolve the key to the
+            // integer id first; GetById(int) and IIdKeyMap exist in both Umbraco 17 and 18.
+            var idAttempt = _idKeyMap.GetIdForKey(key, UmbracoObjectTypes.Document);
+            var content = idAttempt.Success ? _contentService.GetById(idAttempt.Result) : null;
             if (content is null)
             {
                 // Unknown / not-yet-saved document: default to showing the option.
